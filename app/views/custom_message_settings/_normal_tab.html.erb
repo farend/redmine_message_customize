@@ -1,0 +1,9 @@
+<%= form_tag custom_message_settings_path, method: :patch do %>
+  <label><%= l(:field_language) %>: </label><%= select_tag 'lang', options_for_select(languages_options, @lang), include_blank: true, data: {remote: true, url: url_for(action: :edit)} %>
+  <hr>
+
+  <div id='edit-custom-messages'>
+    <%= render 'custom_message_settings/messages', lang: @lang %>
+  </div>
+  <%= submit_tag l(:button_save) %>
+<% end %>

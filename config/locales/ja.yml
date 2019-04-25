@@ -1,0 +1,10 @@
+ja:
+  label_custom_messages: 画面の文言を上書きする
+  text_help_for_input_format: ※ YAML形式で変更したい文言を入力してください
+  text_placeholder_template_case: 例) 「ホーム」を「ホーム2」に変更したい場合
+  text_placeholder_template: |
+      ja:
+        label_home: 'ホーム2'
+  error_unavailable_keys: Redmineに存在しないキーが利用されています
+  label_normal_tab: 通常モード
+  label_yaml_tab: YAMLモード

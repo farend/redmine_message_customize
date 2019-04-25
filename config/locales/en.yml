@@ -1,0 +1,10 @@
+en:
+  label_custom_messages: Customize messages
+  text_help_for_input_format: Please input the keyword you want to change in YAML format.
+  text_placeholder_template_case: 'example: When changing "Home" to "Home2"'
+  text_placeholder_template: |
+      en:
+        label_home: 'Home2'
+  error_unavailable_keys: The keys not present in Redmine are used.
+  label_normal_tab: Normal mode
+  label_yaml_tab: YAML mode

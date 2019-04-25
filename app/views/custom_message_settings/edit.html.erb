@@ -1,0 +1,9 @@
+<%= stylesheet_link_tag('custom_messages', plugin: 'redmine_message_customize') %>
+<%= stylesheet_link_tag('select2.min', plugin: 'redmine_message_customize') %>
+<%= javascript_include_tag('select2.min', plugin: 'redmine_message_customize') %>
+<h2><%= l(:label_custom_messages) %></h2>
+
+<% if @setting.errors.any? %>
+  <%= error_messages_for(@setting) %>
+<% end %>
+<%= render_tabs (@setting.errors.any? ? [] : [{name: 'normal', partial: 'normal_tab', label: 'label_normal_tab'}]) + [{name: 'yaml', partial: 'yaml_tab', label: 'label_yaml_tab'}] %>

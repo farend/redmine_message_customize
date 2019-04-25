@@ -1,0 +1,27 @@
+#edit-custom-messages label {
+  width: 100%;
+  margin-left: 3px;
+  word-break: break-all;
+  text-align: left;
+}
+
+#edit-custom-messages input {
+  width: 100%;
+}
+
+#edit-custom-messages p {
+  padding-left: 3px;
+  margin-top: 1px;
+  border: solid 1px #d1d1d1;
+  background: #eee;
+}
+
+#key-selector {
+  width: 80%;
+}
+
+.btn-disabled {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}

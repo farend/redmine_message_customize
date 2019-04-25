@@ -1,0 +1,34 @@
+<% lang ||= 'en' %>
+<div>Add key: <%= select_tag 'select-key', options_for_select(available_message_options(lang)), id: 'key-selector' %></div>
+<br>
+<div class='tabular'>
+  <%= normal_mode_input_fields(@setting, lang) %>
+</div>
+
+<%= javascript_tag do %>
+$(document).ready(function() {
+  $("#key-selector").select2({
+    width: '100%',
+    placeholder: '変更したい文字を検索してください',
+  });
+});
+
+$('#key-selector').on('select2:select', function (e) {
+  var data = e.params.data;
+  if($('input[name="settings[custom_messages[' + data.id + ']]"]').length === 0){
+    $('<p></p>').prependTo($('#edit-custom-messages .tabular'));
+    $('<label>' + data.id + '</label><br>').appendTo($('#edit-custom-messages .tabular p:first'));
+    $('<input>').attr({
+      type: 'text',
+      value: data.text.replace(/.*: /, ''),
+      name: 'settings[custom_messages[' + data.id + ']]'
+    }).appendTo($('#edit-custom-messages .tabular p:first'));
+    $('<a>').attr({
+       class: 'icon-only icon-del clear-key-link',
+       href: '#',
+       onclick: '$(this).closest("p").remove();; return false;'
+    }).appendTo($('#edit-custom-messages .tabular p:first'));
+    $('#key-selector').val('');
+  }
+});
+<% end %>
