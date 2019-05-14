@@ -40,7 +40,7 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   def custom_message_setting_params
-    params.fetch(:settings, {}).permit(:custom_messages_yaml, custom_messages: {})
+    params.fetch(:settings, {})
   end
 
   def set_lang
