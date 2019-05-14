@@ -1,5 +1,5 @@
 <% lang ||= 'en' %>
-<div>Add key: <%= select_tag 'select-key', options_for_select(available_message_options(lang)), id: 'key-selector' %></div>
+<div><%= l(:text_placeholder_choose_key) %><%= select_tag 'select-key', options_for_select(available_message_options(lang)), id: 'key-selector' %></div>
 <br>
 <div class='tabular'>
   <%= normal_mode_input_fields(@setting, lang) %>
@@ -8,8 +8,7 @@
 <%= javascript_tag do %>
 $(document).ready(function() {
   $("#key-selector").select2({
-    width: '100%',
-    placeholder: '変更したい文字を検索してください',
+    width: '100%'
   });
 });
 

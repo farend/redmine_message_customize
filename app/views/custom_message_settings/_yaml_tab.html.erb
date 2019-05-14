@@ -2,8 +2,8 @@
   <div class='help-message wiki'>
     <p><%= l(:text_help_for_input_format) %></p>
     <p><%= l(:text_placeholder_template_case) %></p>
-    <pre><%= l(:text_placeholder_template) %></pre>
+    <pre><%= l(:text_placeholder_yaml_template) %></pre>
   </div>
-  <%= text_area_tag 'settings[custom_messages_yaml]', @setting.custom_messages_to_yaml, rows: '20', style: 'width: 100%', placeholder: l(:text_placeholder_template) %>
+  <%= text_area_tag 'settings[custom_messages_yaml]', @setting.custom_messages_to_yaml, rows: '20', style: 'width: 100%', placeholder: l(:text_placeholder_yaml_template) %>
   <%= submit_tag l(:button_save) %>
 <% end %>
