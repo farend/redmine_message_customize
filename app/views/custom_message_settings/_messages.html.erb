@@ -1,5 +1,5 @@
 <% lang ||= 'en' %>
-<div><%= l(:text_placeholder_choose_key) %><%= select_tag 'select-key', options_for_select(available_message_options(lang)), id: 'key-selector' %></div>
+<div><%= select_tag 'select-key', available_message_options(@setting, lang), id: 'key-selector' %></div>
 <br>
 <div class='tabular'>
   <%= normal_mode_input_fields(@setting, lang) %>
@@ -8,7 +8,11 @@
 <%= javascript_tag do %>
 $(document).ready(function() {
   $("#key-selector").select2({
-    width: '100%'
+    width: '100%',
+    placeholder: '<%= l(:text_placeholder_choose_key) %>',
+    templateResult: function(option) {
+return $('<span class="key">' + option.id + ':</span> <span>' + option.text.replace(/.*: /, '') + '</span>');
+    }
   });
 });
 
@@ -27,7 +31,14 @@ $('#key-selector').on('select2:select', function (e) {
        href: '#',
        onclick: '$(this).closest("p").remove();; return false;'
     }).appendTo($('#edit-custom-messages .tabular p:first'));
-    $('#key-selector').val('');
+    $('#key-selector option[value="' + data.id + '"]').prop("disabled", true).change();
+    $("#key-selector").select2({
+      width: '100%',
+      placeholder: '<%= l(:text_placeholder_choose_key) %>',
+      templateResult: function(option) {
+  return $('<span class="key">' + option.id + ':</span> <span>' + option.text.replace(/.*: /, '') + '</span>');
+      }
+    });
   }
 });
 <% end %>

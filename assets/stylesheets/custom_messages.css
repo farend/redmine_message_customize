@@ -25,3 +25,13 @@
   cursor: default;
   text-decoration: none;
 }
+
+.select2-container--default .select2-results__option span.key {
+  color: gray;
+}
+.select2-container--default .select2-results__option[aria-disabled=true] {
+  background: #ccc;
+}
+.select2-container--default .select2-results__option[aria-disabled=true] span {
+  color: white;
+}

@@ -1,4 +1,5 @@
 <%= form_tag custom_message_settings_path, method: :patch do %>
+  <%= hidden_field_tag :tab, 'yaml' %>
   <div class='help-message wiki'>
     <p><%= l(:text_help_for_input_format) %></p>
     <p><%= l(:text_placeholder_template_case) %></p>

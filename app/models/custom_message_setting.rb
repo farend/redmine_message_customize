@@ -1,5 +1,4 @@
 class CustomMessageSetting < Setting
-
   before_validation :change_format_to_hash
   validate :custom_message_keys_are_available
 
@@ -13,6 +12,10 @@ class CustomMessageSetting < Setting
     else
       self.value[:custom_messages] || {}
     end
+  end
+
+  def custom_messages_to_flatten_hash(lang=nil)
+    self.class.flatten_hash(custom_messages(lang))
   end
 
   def custom_messages_to_yaml
@@ -31,8 +34,12 @@ class CustomMessageSetting < Setting
   end
 
   def self.available_messages(lang='en')
-    list = I18n.backend.translations[self.find_language(lang).to_sym] || {}
-    self.flatten_hash(list)
+    messages = I18n.backend.translations[self.find_language(lang).to_sym] || {}
+    if messages.nil?
+      CustomMessageSetting.reload_translations!([lang])
+      messages = I18n.backend.translations[lang.to_sym] || {}
+    end
+    self.flatten_hash(messages)
   end
 
   def self.flatten_hash(hash=nil)
@@ -45,7 +52,7 @@ class CustomMessageSetting < Setting
     end
   end
 
-  def self.to_nested_hash(hash=nil)
+  def self.nested_hash(hash=nil)
     hash = self.to_hash unless hash
     new_hash = {}
     hash.each do |key, value|
@@ -78,6 +85,7 @@ class CustomMessageSetting < Setting
 
   def custom_message_keys_are_available
     return false if self.value[:custom_messages].is_a?(Hash) == false || self.errors.present?
+
     custom_messages_hash = {}
     custom_messages.values.each do |hash|
       custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(hash))
@@ -91,15 +99,15 @@ class CustomMessageSetting < Setting
   end
 
   def change_format_to_hash
-    begin
-      if self.value[:custom_messages].is_a?(Hash)
-        YAML.dump(self.value[:custom_messages])
-      else
-        self.value = {custom_messages: YAML.load(self.value[:custom_messages])}
-      end
-    rescue => e
-      self.errors.add(:base, e.message)
-      return false
+    if self.value[:custom_messages].is_a?(Hash)
+      YAML.dump(self.value[:custom_messages])
+    else
+      custom_messages = YAML.load(self.value[:custom_messages])
+      raise l(:error_invalid_yaml_format) unless custom_messages.is_a?(Hash)
+      self.value = {custom_messages: custom_messages}
     end
+  rescue => e
+    self.errors.add(:base, e.message)
+    false
   end
 end

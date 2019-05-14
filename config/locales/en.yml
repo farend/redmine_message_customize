@@ -7,5 +7,6 @@ en:
         label_home: 'Home2'
   text_placeholder_choose_key: Please select the message you want to change.
   error_unavailable_keys: The keys not present in Redmine are used.
+  error_invalid_yaml_format: The format of yaml is invalid.
   label_normal_tab: Normal mode
   label_yaml_tab: YAML mode

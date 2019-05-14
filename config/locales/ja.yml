@@ -7,5 +7,6 @@ ja:
         label_home: 'ホーム2'
   text_placeholder_choose_key: 変更したい文言を選択してください。
   error_unavailable_keys: Redmineに存在しないキーが利用されています
+  error_invalid_yaml_format: YAMLの形式が正しくありません。
   label_normal_tab: 通常モード
   label_yaml_tab: YAMLモード

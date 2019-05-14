@@ -1,25 +1,15 @@
 module CustomMessageSettingsHelper
-  def available_messages(lang)
-    messages = I18n.backend.translations[lang.to_sym]
-    if messages.nil?
-      CustomMessageSetting.reload_translations!([lang])
-      messages = I18n.backend.translations[lang.to_sym] || {}
-    end
+  def available_message_options(setting, lang)
+    options = [['', '']] +
+                CustomMessageSetting.available_messages(lang).map{|k, v| ["#{k}: #{v}", k]}
 
-    CustomMessageSetting.flatten_hash(messages)
-  end
-
-  def available_message_options(lang)
-    [['', '']] +
-    available_messages(lang).map do |k, v|
-      ["#{k}: #{v}", k]
-    end
+    options_for_select(options, disabled: setting.custom_messages_to_flatten_hash(lang).keys)
   end
 
   def normal_mode_input_fields(setting, lang)
     return '' if setting.value[:custom_messages].is_a?(String) || setting.value[:custom_messages].blank?
     content = ''
-    custom_messages_hash = CustomMessageSetting.flatten_hash(setting.custom_messages[lang.to_s] || {})
+    custom_messages_hash = setting.custom_messages_to_flatten_hash(lang.to_s)
     custom_messages_hash.each do |k, v|
       content += content_tag(:p) do
         content_tag(:label, k) +

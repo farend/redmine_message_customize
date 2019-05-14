@@ -10,15 +10,16 @@ class CustomMessageSettingsController < ApplicationController
 
   def update
     original_custom_messages = @setting.custom_messages
-    languages = (original_custom_messages ? original_custom_messages.keys.map(&:to_s) : [])
+    languages = (original_custom_messages.try(:keys) ? original_custom_messages.keys.map(&:to_s) : [])
 
     if custom_message_setting_params[:custom_messages]
-      messages = original_custom_messages.merge({@lang => CustomMessageSetting.to_nested_hash(custom_message_setting_params[:custom_messages].to_unsafe_h.to_hash) })
+      messages = original_custom_messages.merge({@lang => CustomMessageSetting.nested_hash(custom_message_setting_params[:custom_messages].to_unsafe_h.to_hash) })
     elsif custom_message_setting_params[:custom_messages_yaml]
       messages = custom_message_setting_params[:custom_messages_yaml]
     else
-      message = {@lang => {}}
+      messages = {@lang => {}}
     end
+
     if @setting.update_custom_messages(messages)
       flash[:notice] = l(:notice_successful_update)
       new_custom_messages = @setting.custom_messages
@@ -26,7 +27,7 @@ class CustomMessageSettingsController < ApplicationController
         languages += new_custom_messages.keys.map(&:to_s)
         CustomMessageSetting.reload_translations!(languages)
       end
-      redirect_to edit_custom_message_settings_path
+      redirect_to edit_custom_message_settings_path(tab: params[:tab])
     else
       @lang ||= User.current.language
       render :edit
@@ -34,7 +35,6 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   private
-
   def set_custom_message_setting
     @setting = CustomMessageSetting.find_or_default
   end
