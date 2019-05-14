@@ -8,3 +8,11 @@ This plugin changes the translation of the wording on the screen defined in "con
 
 * YAML mode
 <kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/yaml_mode.png" /></kbd>
+
+## Install
+
+```
+$ cd /your/path/redmine/plugins
+$ git clone https://github.com/ishikawa999/redmine_message_customize.git
+$ # restart
+```
