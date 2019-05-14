@@ -1,5 +1,10 @@
-# redmine_custom_messages
+# redmine_message_customize
 
-Redmineのプラグイン
+This is a plugin for Redmine.  
+This plugin changes the translation of the wording on the screen defined in "config/locales/*.yml" in the admin view.
 
-config/locales/*.ymlで定義されている画面上の文言の訳文を管理画面から変更できるようにします。
+* Normal mode
+<kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/normal_mode.png" /></kbd>
+
+* YAML mode
+<kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/yaml_mode.png" /></kbd>
