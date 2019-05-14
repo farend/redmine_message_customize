@@ -23,10 +23,8 @@ class CustomMessageSettingsController < ApplicationController
     if @setting.update_custom_messages(messages)
       flash[:notice] = l(:notice_successful_update)
       new_custom_messages = @setting.custom_messages
-      if new_custom_messages.present?
-        languages += new_custom_messages.keys.map(&:to_s)
-        CustomMessageSetting.reload_translations!(languages)
-      end
+      languages += new_custom_messages.keys.map(&:to_s) if new_custom_messages.try(:keys)
+      CustomMessageSetting.reload_translations!(languages)
       redirect_to edit_custom_message_settings_path(tab: params[:tab])
     else
       @lang ||= User.current.language
