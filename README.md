@@ -14,5 +14,5 @@ This plugin changes the translation of the wording on the screen defined in "con
 ```
 $ cd /your/path/redmine/plugins
 $ git clone https://github.com/ishikawa999/redmine_message_customize.git
-$ # restart
+$ # redmine restart
 ```
