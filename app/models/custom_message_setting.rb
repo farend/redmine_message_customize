@@ -1,6 +1,5 @@
 class CustomMessageSetting < Setting
-  before_validation :change_format_to_hash
-  validate :custom_message_keys_are_available
+  validate :add_errors, :convertible_to_yaml, :custom_message_keys_are_available
 
   def self.find_or_default
     super('plugin_redmine_message_customize')
@@ -28,13 +27,35 @@ class CustomMessageSetting < Setting
     end
   end
 
-  def update_custom_messages(messages)
+  def update_with_custom_messages(custom_messages, lang)
+    value = CustomMessageSetting.nested_hash(custom_messages)
+    original_custom_messages = self.custom_messages
+    messages =
+      if value.present?
+        original_custom_messages.merge({lang => value})
+      else
+        original_custom_messages.delete(lang)
+        original_custom_messages
+      end
+
     self.value = {custom_messages: (messages.present? ? messages : {})}
     self.save
   end
 
+  def update_with_custom_messages_yaml(yaml)
+    begin
+      messages = YAML.load(yaml)
+      @errs = {base: l(:error_invalid_yaml_format) } if messages.is_a?(Hash) == false && messages.present?
+      self.value = {custom_messages: (messages.present? ? messages : {})}
+    rescue => e
+      @errs = {base: e.message}
+      self.value = {custom_messages: yaml}
+    end
+    self.save
+  end
+
   def self.available_messages(lang='en')
-    messages = I18n.backend.translations[self.find_language(lang).to_sym] || {}
+    messages = I18n.backend.translations[self.find_language(lang).to_sym]
     if messages.nil?
       CustomMessageSetting.reload_translations!([lang])
       messages = I18n.backend.translations[lang.to_sym] || {}
@@ -42,6 +63,7 @@ class CustomMessageSetting < Setting
     self.flatten_hash(messages)
   end
 
+  # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
     hash = self.to_hash unless hash
     hash.each_with_object({}) do |(key, value), content|
@@ -52,8 +74,8 @@ class CustomMessageSetting < Setting
     end
   end
 
+  # {'date.formats.defaults' => '%m/%d/%Y'} to { date: { formats: { defaults: '%m/%d/%Y'}}}
   def self.nested_hash(hash=nil)
-    hash = self.to_hash unless hash
     new_hash = {}
     hash.each do |key, value|
       h = value
@@ -87,27 +109,27 @@ class CustomMessageSetting < Setting
     return false if self.value[:custom_messages].is_a?(Hash) == false || self.errors.present?
 
     custom_messages_hash = {}
-    custom_messages.values.each do |hash|
-      custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(hash))
+    custom_messages.values.compact.each do |val|
+      custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
     end
     available_keys = self.class.flatten_hash(self.class.available_messages).keys
     unavailable_keys = custom_messages_hash.keys.reject{|k|available_keys.include?(k.to_sym)}
     if unavailable_keys.present?
       self.errors.add(:base, l(:error_unavailable_keys) + "keys: [#{unavailable_keys.join(', ')}]")
-      return false
+      false
     end
   end
 
-  def change_format_to_hash
-    if self.value[:custom_messages].is_a?(Hash)
-      YAML.dump(self.value[:custom_messages])
-    else
-      custom_messages = YAML.load(self.value[:custom_messages])
-      raise l(:error_invalid_yaml_format) unless custom_messages.is_a?(Hash)
-      self.value = {custom_messages: custom_messages}
+  def convertible_to_yaml
+    YAML.dump(self.value[:custom_messages])
+  end
+
+  def add_errors
+    unless @errs.blank?
+      @errs.each do |key, value|
+        self.errors.add(key, value)
+      end
+      false
     end
-  rescue => e
-    self.errors.add(:base, e.message)
-    false
   end
 end

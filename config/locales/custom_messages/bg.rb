@@ -1,1 +1,1 @@
-{ bg: CustomizeMessagesSetting.find_or_default.custom_messages('bg') }
+{ bg: CustomMessageSetting.find_or_default.custom_messages('bg') }
