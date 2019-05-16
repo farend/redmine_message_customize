@@ -5,7 +5,7 @@ This plugin changes the translation of the wording on the screen defined in "con
 
 ## Usage
 
-* 1: Open setting page
+* 1: Open setting page  
 Administration > Message customize
 <kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/administration_menu.png" /></kbd>
 
