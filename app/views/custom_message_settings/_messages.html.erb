@@ -6,6 +6,31 @@
 
 <%= javascript_tag do %>
 $(document).ready(function() {
+  setSelect2();
+});
+
+$('#key-selector').on('select2:select', function (e) {
+  var key = e.params.data.id;
+  var val = e.params.data.text;
+  if($('input[name="settings[custom_messages[' + key + ']]"]').length === 0){
+    $('<p></p>').prependTo($('#edit-custom-messages .tabular'));
+    $('<label>' + key + '</label><br>').appendTo($('#edit-custom-messages .tabular p:first'));
+    $('<input>').attr({
+      type: 'text',
+      value: val.replace(/.*: /, ''),
+      name: 'settings[custom_messages[' + key + ']]'
+    }).appendTo($('#edit-custom-messages .tabular p:first'));
+    $('<a>').attr({
+       class: 'icon-only icon-del clear-key-link',
+       href: '#',
+       onclick: '$(this).closest("p").remove();; return false;'
+    }).appendTo($('#edit-custom-messages .tabular p:first'));
+    $('#key-selector option[value="' + key + '"]').prop("disabled", true).change();
+    setSelect2();
+  }
+});
+
+function setSelect2(){
   $("#key-selector").select2({
     width: '100%',
     placeholder: '<%= l(:text_placeholder_choose_key) %>',
@@ -13,31 +38,5 @@ $(document).ready(function() {
 return $('<span class="key">' + option.id + ':</span> <span>' + option.text.replace(/.*: /, '') + '</span>');
     }
   });
-});
-
-$('#key-selector').on('select2:select', function (e) {
-  var data = e.params.data;
-  if($('input[name="settings[custom_messages[' + data.id + ']]"]').length === 0){
-    $('<p></p>').prependTo($('#edit-custom-messages .tabular'));
-    $('<label>' + data.id + '</label><br>').appendTo($('#edit-custom-messages .tabular p:first'));
-    $('<input>').attr({
-      type: 'text',
-      value: data.text.replace(/.*: /, ''),
-      name: 'settings[custom_messages[' + data.id + ']]'
-    }).appendTo($('#edit-custom-messages .tabular p:first'));
-    $('<a>').attr({
-       class: 'icon-only icon-del clear-key-link',
-       href: '#',
-       onclick: '$(this).closest("p").remove();; return false;'
-    }).appendTo($('#edit-custom-messages .tabular p:first'));
-    $('#key-selector option[value="' + data.id + '"]').prop("disabled", true).change();
-    $("#key-selector").select2({
-      width: '100%',
-      placeholder: '<%= l(:text_placeholder_choose_key) %>',
-      templateResult: function(option) {
-  return $('<span class="key">' + option.id + ':</span> <span>' + option.text.replace(/.*: /, '') + '</span>');
-      }
-    });
-  }
-});
+}
 <% end %>
