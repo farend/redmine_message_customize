@@ -16,3 +16,10 @@ $ cd /your/path/redmine/plugins
 $ git clone https://github.com/ishikawa999/redmine_message_customize.git
 $ # redmine restart
 ```
+
+## Run test
+
+```
+$ cd /your/path/redmine
+$ bundle exec rake test TEST=plugins/redmine_message_customize/test RAILS_ENV=test
+```

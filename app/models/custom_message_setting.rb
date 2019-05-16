@@ -6,11 +6,12 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages(lang=nil)
+    messages = self.value[:custom_messages] || self.value['custom_messages']
     if lang.present?
-      self.value.dig(:custom_messages, self.class.find_language(lang)) || {}
-    else
-      self.value[:custom_messages] || {}
+      messages = messages[self.class.find_language(lang)]
     end
+
+    messages.present? ? messages : {}
   end
 
   def custom_messages_to_flatten_hash(lang=nil)
@@ -18,12 +19,13 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages_to_yaml
-    if self.custom_messages.blank?
+    messages = self.custom_messages
+    if messages.blank?
       ''
-    elsif self.custom_messages.is_a?(Hash)
-      YAML.dump(self.custom_messages)
+    elsif messages.is_a?(Hash)
+      YAML.dump(messages)
     else
-      self.custom_messages
+      messages
     end
   end
 
@@ -54,7 +56,7 @@ class CustomMessageSetting < Setting
     self.save
   end
 
-  def self.available_messages(lang='en')
+  def self.available_messages(lang)
     messages = I18n.backend.translations[self.find_language(lang).to_sym]
     if messages.nil?
       CustomMessageSetting.reload_translations!([lang])
@@ -112,10 +114,10 @@ class CustomMessageSetting < Setting
     custom_messages.values.compact.each do |val|
       custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
     end
-    available_keys = self.class.flatten_hash(self.class.available_messages).keys
-    unavailable_keys = custom_messages_hash.keys.reject{|k|available_keys.include?(k.to_sym)}
+    available_keys = self.class.flatten_hash(self.class.available_messages('en')).keys
+    unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
     if unavailable_keys.present?
-      self.errors.add(:base, l(:error_unavailable_keys) + "keys: [#{unavailable_keys.join(', ')}]")
+      self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
       false
     end
   end
@@ -125,10 +127,11 @@ class CustomMessageSetting < Setting
   end
 
   def add_errors
-    unless @errs.blank?
+    if @errs.present?
       @errs.each do |key, value|
         self.errors.add(key, value)
       end
+      @errs = nil
       false
     end
   end
