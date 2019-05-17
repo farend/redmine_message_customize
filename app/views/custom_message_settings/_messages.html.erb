@@ -21,7 +21,7 @@ $('#key-selector').on('select2:select', function (e) {
       name: 'settings[custom_messages[' + key + ']]'
     }).appendTo($('#edit-custom-messages .tabular p:first'));
     $('<a>').attr({
-       class: 'icon-only icon-del clear-key-link',
+       class: 'icon icon-del clear-key-link',
        href: '#',
        onclick: '$(this).closest("p").remove();; return false;'
     }).appendTo($('#edit-custom-messages .tabular p:first'));

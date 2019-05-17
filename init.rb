@@ -4,7 +4,7 @@ p = Redmine::Plugin.register :redmine_message_customize do
   settings default: { custom_messages: {} }
   menu :admin_menu, :custom_messages, { controller: 'custom_message_settings', action: 'edit' },
          caption: :label_custom_messages, html: { class: 'icon icon-edit' }
-  requires_redmine version_or_higher: '3.3.0'
+  requires_redmine version_or_higher: '3.2'
 end
 
 Rails.application.config.i18n.load_path += Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))

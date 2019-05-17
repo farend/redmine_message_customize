@@ -14,7 +14,7 @@ module CustomMessageSettingsHelper
       content += content_tag(:p) do
         content_tag(:label, k) +
         text_field_tag("settings[custom_messages[#{k}]]", v.to_s) +
-        link_to_function('', '$(this).closest("p").remove();', class: 'icon-only icon-del clear-key-link')
+        link_to_function('', '$(this).closest("p").remove();', class: 'icon icon-del clear-key-link')
       end
     end
     content
