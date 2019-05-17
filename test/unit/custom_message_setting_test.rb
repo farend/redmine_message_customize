@@ -14,6 +14,12 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal "#{l(:error_unavailable_keys)} keys: [foobar]", @custom_message_setting.errors[:base].first
   end
 
+  def test_validate_with_not_available_languages_should_return_false
+    @custom_message_setting.value = { custom_messages: { 'foo' => {'label_home' => 'Home' }} }
+    assert_not @custom_message_setting.save
+    assert_equal "#{l(:error_unavailable_languages)} [foo]", @custom_message_setting.errors[:base].first
+  end
+
   def test_find_or_default
     assert_equal @custom_message_setting, CustomMessageSetting.find_or_default
   end
@@ -34,7 +40,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal 'test', @custom_message_setting.custom_messages_to_yaml
   end
 
-  def test_update_with_custom_messages_if_custom_messages_is_present
+  def test_update_with_custom_messages_if_custom_messages_is_exist
     flatten_hash = {'label_home' => 'Home3', 'time.am' => 'foo'}
 
     assert @custom_message_setting.update_with_custom_messages(flatten_hash, 'en')

@@ -1,5 +1,6 @@
 class CustomMessageSetting < Setting
-  validate :add_errors, :convertible_to_yaml, :custom_message_keys_are_available
+  validate :add_errors, :convertible_to_yaml,
+           :custom_message_languages_are_available, :custom_message_keys_are_available
 
   def self.find_or_default
     super('plugin_redmine_message_customize')
@@ -118,6 +119,18 @@ class CustomMessageSetting < Setting
     unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
     if unavailable_keys.present?
       self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
+      false
+    end
+  end
+
+  def custom_message_languages_are_available
+    return false if self.value[:custom_messages].is_a?(Hash) == false || self.errors.present?
+    unavailable_languages =
+      custom_messages.keys.compact.reject do |language|
+        I18n.available_locales.include?(language.to_sym)
+      end
+    if unavailable_languages.present?
+      self.errors.add(:base, l(:error_unavailable_languages) + " [#{unavailable_languages.join(', ')}]")
       false
     end
   end
