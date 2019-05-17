@@ -48,7 +48,7 @@ class CustomMessageSetting < Setting
   def update_with_custom_messages_yaml(yaml)
     begin
       messages = YAML.load(yaml)
-      @errs = {base: l(:error_invalid_yaml_format) } if messages.is_a?(Hash) == false && messages.present?
+      @errs = {base: l(:error_invalid_yaml_format) } if !messages.is_a?(Hash) && messages.present?
       self.value = {custom_messages: (messages.present? ? messages : {})}
     rescue => e
       @errs = {base: e.message}
@@ -109,7 +109,7 @@ class CustomMessageSetting < Setting
   private
 
   def custom_message_keys_are_available
-    return false if self.value[:custom_messages].is_a?(Hash) == false || self.errors.present?
+    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
 
     custom_messages_hash = {}
     custom_messages.values.compact.each do |val|
@@ -124,7 +124,8 @@ class CustomMessageSetting < Setting
   end
 
   def custom_message_languages_are_available
-    return false if self.value[:custom_messages].is_a?(Hash) == false || self.errors.present?
+    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
+
     unavailable_languages =
       custom_messages.keys.compact.reject do |language|
         I18n.available_locales.include?(language.to_sym)
