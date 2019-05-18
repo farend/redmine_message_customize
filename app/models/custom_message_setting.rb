@@ -58,10 +58,10 @@ class CustomMessageSetting < Setting
   end
 
   def self.available_messages(lang)
-    messages = I18n.backend.translations[self.find_language(lang).to_sym]
+    messages = I18n.backend.translations[self.find_language(lang).to_s.to_sym]
     if messages.nil?
       CustomMessageSetting.reload_translations!([lang])
-      messages = I18n.backend.translations[lang.to_sym] || {}
+      messages = I18n.backend.translations[lang.to_s.to_sym] || {}
     end
     self.flatten_hash(messages)
   end
