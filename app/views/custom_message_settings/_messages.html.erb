@@ -25,6 +25,7 @@ $('#key-selector').on('select2:select', function (e) {
        href: '#',
        onclick: '$(this).closest("p").remove();; return false;'
     }).appendTo($('#edit-custom-messages .tabular p:first'));
+    $('#key-selector').val('').change();
     $('#key-selector option[value="' + key + '"]').prop("disabled", true).change();
     setSelect2();
   }
