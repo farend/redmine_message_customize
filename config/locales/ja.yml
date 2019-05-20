@@ -6,6 +6,7 @@ ja:
       ja:
         label_home: 'ホーム2'
   text_placeholder_choose_key: 変更したい文言を選択してください。
+  text_description_of_search_box: 検索ボックスにキーワードを入力することで、選択肢を絞り込むことが出来ます。
   error_unavailable_keys: Redmineに存在しないキーが利用されています。
   error_unavailable_languages: Redmineで利用できない言語が利用されています。
   error_invalid_yaml_format: YAMLの形式が正しくありません。

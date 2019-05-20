@@ -1,4 +1,7 @@
-<div><%= select_tag 'select-key', available_message_options(@setting, lang), id: 'key-selector' %></div>
+<div>
+  <%= select_tag 'select-key', available_message_options(@setting, lang), id: 'key-selector' %>
+  <span class='icon icon-help'><%= l(:text_description_of_search_box) %></span>
+</div>
 <br>
 <div class='tabular'>
   <%= normal_mode_input_fields(@setting, lang) %>

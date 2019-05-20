@@ -6,6 +6,7 @@ en:
       en:
         label_home: 'Home2'
   text_placeholder_choose_key: Please select the message you want to change.
+  text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
   error_unavailable_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.
   error_invalid_yaml_format: The format of yaml is invalid.
