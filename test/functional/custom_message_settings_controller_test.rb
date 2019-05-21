@@ -7,6 +7,7 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
   def setup
     @request.session[:user_id] = 1 # admin
     CustomMessageSetting.reload_translations!('en')
+    I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
   # custom_message_settings/edit
@@ -58,5 +59,12 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
 
     assert_response 403
     assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
+  end
+
+  def test_toggle_enabled
+    patch :toggle_enabled
+
+    assert_redirected_to edit_custom_message_settings_path
+    assert_equal l(:notice_successful_update), flash[:notice]
   end
 end

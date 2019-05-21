@@ -12,3 +12,5 @@ en:
   error_invalid_yaml_format: The format of yaml is invalid.
   label_normal_tab: Normal mode
   label_yaml_tab: YAML mode
+  label_enable_customize: Enable customize
+  label_disable_customize: Disable customize

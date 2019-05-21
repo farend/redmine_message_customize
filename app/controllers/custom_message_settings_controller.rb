@@ -1,14 +1,13 @@
 class CustomMessageSettingsController < ApplicationController
   layout 'admin'
   before_action :require_admin, :set_custom_message_setting, :set_lang
-  require_sudo_mode :edit, :update
+  require_sudo_mode :edit, :update, :toggle_enabled
 
   def edit
   end
 
   def update
-    original_custom_messages = @setting.custom_messages
-    languages = (original_custom_messages.try(:keys) ? original_custom_messages.keys.map(&:to_s) : [])
+    languages = @setting.using_languages
 
     if setting_params.key?(:custom_messages) || params[:tab] == 'normal'
       @setting.update_with_custom_messages(setting_params[:custom_messages].try(:to_unsafe_h).try(:to_hash) || {}, @lang)
@@ -18,11 +17,19 @@ class CustomMessageSettingsController < ApplicationController
 
     if @setting.errors.blank?
       flash[:notice] = l(:notice_successful_update)
-      new_custom_messages = @setting.custom_messages
-      languages += new_custom_messages.keys.map(&:to_s) if new_custom_messages.try(:keys)
+      languages += @setting.using_languages
       CustomMessageSetting.reload_translations!(languages)
 
       redirect_to edit_custom_message_settings_path(tab: params[:tab], lang: @lang)
+    else
+      render :edit
+    end
+  end
+
+  def toggle_enabled
+    if @setting.toggle_enabled!
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to edit_custom_message_settings_path
     else
       render :edit
     end

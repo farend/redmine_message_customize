@@ -6,6 +6,8 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
   def setup
     @custom_message_setting = CustomMessageSetting.find(1)
+    CustomMessageSetting.reload_translations!('en')
+    I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
   def test_validate_with_not_available_keys_should_return_false
@@ -22,6 +24,17 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
   def test_find_or_default
     assert_equal @custom_message_setting, CustomMessageSetting.find_or_default
+  end
+
+  def test_enabled?
+    @custom_message_setting.value = { enabled: 'true' }
+    assert @custom_message_setting.enabled?
+
+    @custom_message_setting.value = { enabled: 'false' }
+    assert_not @custom_message_setting.enabled?
+
+    @custom_message_setting.value = { enabled: nil }
+    assert @custom_message_setting.enabled?
   end
 
   def test_custom_messages
@@ -60,6 +73,22 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     yaml = "---\nen:\n  label_home: Home3\ninvalid-string"
     assert_not @custom_message_setting.update_with_custom_messages_yaml(yaml)
     assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
+  end
+
+  def test_toggle_enabled!
+    assert_equal 'Home1', l(:label_home)
+
+    @custom_message_setting.toggle_enabled!
+    assert_not @custom_message_setting.enabled?
+    assert_equal 'Home', l(:label_home)
+
+    @custom_message_setting.toggle_enabled!
+    assert @custom_message_setting.enabled?
+    assert_equal 'Home1', l(:label_home)
+  end
+
+  def test_using_languages
+    assert_equal ['en', 'ja'], @custom_message_setting.using_languages
   end
 
   def test_available_messages_should_flatten_translations

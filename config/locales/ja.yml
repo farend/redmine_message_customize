@@ -12,3 +12,5 @@ ja:
   error_invalid_yaml_format: YAMLの形式が正しくありません。
   label_normal_tab: 通常モード
   label_yaml_tab: YAMLモード
+  label_enable_customize: カスタマイズを有効にする
+  label_disable_customize: カスタマイズを無効にする
