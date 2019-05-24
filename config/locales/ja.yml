@@ -10,6 +10,8 @@ ja:
   error_unavailable_keys: Redmineに存在しないキーが利用されています。
   error_unavailable_languages: Redmineで利用できない言語が利用されています。
   error_invalid_yaml_format: YAMLの形式が正しくありません。
+  notice_enabled_customize: メッセージのカスタマイズを有効に変更しました。
+  notice_disabled_customize: メッセージのカスタマイズを無効に変更しました。
   label_normal_tab: 通常モード
   label_yaml_tab: YAMLモード
   label_enable_customize: カスタマイズを有効にする

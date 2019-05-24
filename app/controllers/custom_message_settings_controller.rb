@@ -28,7 +28,8 @@ class CustomMessageSettingsController < ApplicationController
 
   def toggle_enabled
     if @setting.toggle_enabled!
-      flash[:notice] = l(:notice_successful_update)
+      flash[:notice] =
+        @setting.enabled? ? l(:notice_enabled_customize) : l(:notice_disabled_customize)
       redirect_to edit_custom_message_settings_path
     else
       render :edit

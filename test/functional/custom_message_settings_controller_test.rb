@@ -63,8 +63,10 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
 
   def test_toggle_enabled
     patch :toggle_enabled
-
     assert_redirected_to edit_custom_message_settings_path
-    assert_equal l(:notice_successful_update), flash[:notice]
+    assert_equal l(:notice_disabled_customize), flash[:notice]
+
+    patch :toggle_enabled
+    assert_equal l(:notice_enabled_customize), flash[:notice]
   end
 end
