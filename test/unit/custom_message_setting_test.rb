@@ -112,8 +112,8 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   end
 
   def test_reload_translations!
-    assert_nil I18n.backend.translations[:fr]
+    assert_nil I18n.backend.send(:translations)[:fr]
     CustomMessageSetting.reload_translations!(['fr'])
-    assert_not_nil I18n.backend.translations[:fr]
+    assert_not_nil I18n.backend.send(:translations)[:fr]
   end
 end

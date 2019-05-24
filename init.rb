@@ -10,7 +10,3 @@ end
 if CustomMessageSetting.find_or_default.enabled?
   Rails.application.config.i18n.load_path += Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))
 end
-
-class Redmine::I18n::Backend
-  public :translations
-end
