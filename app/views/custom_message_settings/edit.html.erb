@@ -6,4 +6,8 @@
 <% if @setting.errors.any? %>
   <%= error_messages_for(@setting) %>
 <% end %>
+<p class='toggle-enable'>
+  <span class='icon icon-settings'></span>
+  <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post %>
+</p>
 <%= render_tabs (@setting.errors.any? ? [] : [{name: 'normal', partial: 'normal_tab', label: 'label_normal_tab'}]) + [{name: 'yaml', partial: 'yaml_tab', label: 'label_yaml_tab'}] %>
