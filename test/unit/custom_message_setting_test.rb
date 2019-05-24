@@ -76,6 +76,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   end
 
   def test_toggle_enabled!
+    assert @custom_message_setting.enabled?
     assert_equal 'Home1', l(:label_home)
 
     @custom_message_setting.toggle_enabled!
