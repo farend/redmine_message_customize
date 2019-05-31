@@ -6,10 +6,6 @@ class CustomMessageSetting < Setting
     super('plugin_redmine_message_customize')
   end
 
-  def enabled?
-    !(self.value[:enabled] == 'false')
-  end
-
   def custom_messages(lang=nil)
     messages = self.value[:custom_messages] || self.value['custom_messages']
     if lang.present?
@@ -61,35 +57,11 @@ class CustomMessageSetting < Setting
     self.save
   end
 
-  def toggle_enabled!
-    customize_files = Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))
-    self.value = self.value.deep_merge({enabled: (!self.enabled?).to_s})
-
-    if result = self.save
-      if self.enabled?
-        I18n.load_path += customize_files
-      else
-        I18n.load_path -= customize_files
-      end
-      self.class.reload_translations!(self.using_languages)
-    end
-    result
-  end
-
-  def using_languages
-    messages = self.custom_messages
-    if messages.is_a?(Hash)
-      messages.keys.map(&:to_s)
-    else
-      [User.current.language]
-    end
-  end
-
   def self.available_messages(lang)
-    messages = I18n.backend.send(:translations)[self.find_language(lang).to_s.to_sym]
+    messages = I18n.backend.translations[self.find_language(lang).to_s.to_sym]
     if messages.nil?
       CustomMessageSetting.reload_translations!([lang])
-      messages = I18n.backend.send(:translations)[lang.to_s.to_sym] || {}
+      messages = I18n.backend.translations[lang.to_s.to_sym] || {}
     end
     self.flatten_hash(messages)
   end
@@ -120,7 +92,7 @@ class CustomMessageSetting < Setting
   end
 
   def self.reload_translations!(languages)
-    paths = I18n.load_path.select {|path| self.find_language(languages).include?(File.basename(path, '.*').to_s)}
+    paths = ::I18n.load_path.select {|path| self.find_language(languages).include?(File.basename(path, '.*').to_s)}
     I18n.backend.load_translations(paths)
   end
 

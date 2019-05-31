@@ -1,7 +1,4 @@
 one:
   id: 1
   name: plugin_redmine_message_customize
-  value: {
-    custom_messages: { en: { label_home: 'Home1' }, ja: { label_home: 'Home2' }},
-    enabled: 'true'
-    }
+  value: { custom_messages: { en: { label_home: 'Home1' }, ja: { label_home: 'Home2' }}}

@@ -10,9 +10,5 @@ en:
   error_unavailable_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.
   error_invalid_yaml_format: The format of yaml is invalid.
-  notice_enabled_customize: Successful in enable messages customization.
-  notice_disabled_customize: Successful in disable messages customization.
   label_normal_tab: Normal mode
   label_yaml_tab: YAML mode
-  label_enable_customize: Enable customize
-  label_disable_customize: Disable customize
