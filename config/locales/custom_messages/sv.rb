@@ -1,1 +1,1 @@
-{ sv: CustomMessageSetting.find_or_default.custom_messages('sv') }
+{ sv: CustomMessageSetting.find_or_default.custom_messages('sv', true) }

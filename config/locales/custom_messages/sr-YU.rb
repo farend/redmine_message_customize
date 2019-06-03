@@ -1,1 +1,1 @@
-{ "sr-YU": CustomMessageSetting.find_or_default.custom_messages('sr-YU') }
+{ "sr-YU": CustomMessageSetting.find_or_default.custom_messages('sr-YU', true) }

@@ -1,1 +1,1 @@
-{ nl: CustomMessageSetting.find_or_default.custom_messages('nl') }
+{ nl: CustomMessageSetting.find_or_default.custom_messages('nl', true) }

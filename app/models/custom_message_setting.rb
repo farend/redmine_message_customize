@@ -7,16 +7,20 @@ class CustomMessageSetting < Setting
   end
 
   def enabled?
-    !(self.value[:enabled] == 'false')
+    self.value[:enabled] != 'false'
   end
 
-  def custom_messages(lang=nil)
+  def custom_messages(lang=nil, check_enabled=false)
     messages = self.value[:custom_messages] || self.value['custom_messages']
     if lang.present?
       messages = messages[self.class.find_language(lang)]
     end
 
-    messages.present? ? messages : {}
+    if messages.blank? || (check_enabled && !self.enabled?)
+      {}
+    else
+      messages
+    end
   end
 
   def custom_messages_to_flatten_hash(lang=nil)
@@ -62,15 +66,9 @@ class CustomMessageSetting < Setting
   end
 
   def toggle_enabled!
-    customize_files = Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))
     self.value = self.value.deep_merge({enabled: (!self.enabled?).to_s})
 
     if result = self.save
-      if self.enabled?
-        I18n.load_path += customize_files
-      else
-        I18n.load_path -= customize_files
-      end
       self.class.reload_translations!(self.using_languages)
     end
     result

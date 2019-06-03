@@ -1,1 +1,1 @@
-{ mk: CustomMessageSetting.find_or_default.custom_messages('mk') }
+{ mk: CustomMessageSetting.find_or_default.custom_messages('mk', true) }

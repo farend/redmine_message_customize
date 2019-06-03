@@ -1,1 +1,1 @@
-{ zh: CustomMessageSetting.find_or_default.custom_messages('zh') }
+{ zh: CustomMessageSetting.find_or_default.custom_messages('zh', true) }

@@ -43,6 +43,17 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal ({}), @custom_message_setting.custom_messages('foo')
   end
 
+  def test_custom_messages_with_check_enabled
+    assert @custom_message_setting.enabled?
+    assert_equal ({'label_home' => 'Home1'}), @custom_message_setting.custom_messages('en', true)
+    assert_equal ({'label_home' => 'Home1'}), @custom_message_setting.custom_messages('en', false)
+
+    @custom_message_setting.toggle_enabled!
+    assert_not @custom_message_setting.enabled?
+    assert_equal ({}), @custom_message_setting.custom_messages('en', true)
+    assert_equal ({'label_home' => 'Home1'}), @custom_message_setting.custom_messages('en', false)
+  end
+
   def test_custom_messages_to_yaml
     assert_equal "---\nen:\n  label_home: Home1\nja:\n  label_home: Home2\n", @custom_message_setting.custom_messages_to_yaml
 

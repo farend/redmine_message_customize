@@ -7,6 +7,4 @@ p = Redmine::Plugin.register :redmine_message_customize do
   requires_redmine version_or_higher: '3.2'
 end
 
-if CustomMessageSetting.find_or_default.enabled?
-  Rails.application.config.i18n.load_path += Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))
-end
+Rails.application.config.i18n.load_path += Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))

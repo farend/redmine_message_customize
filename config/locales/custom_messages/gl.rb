@@ -1,1 +1,1 @@
-{ gl: CustomMessageSetting.find_or_default.custom_messages('gl') }
+{ gl: CustomMessageSetting.find_or_default.custom_messages('gl', true) }
