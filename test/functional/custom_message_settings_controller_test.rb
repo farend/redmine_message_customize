@@ -24,7 +24,8 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
   def test_edit_except_admin_user
     @request.session[:user_id] = 2
     get :edit
-    assert_redirected_to (/#{signin_path}/)
+    assert_response 403
+    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
   end
 
   def test_update_with_custom_messages
@@ -56,7 +57,8 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
     @request.session[:user_id] = 2
     get :update, params: { settings: {'custom_messages'=>{'label_home' => 'Home3'}}, lang: 'en', tab: 'normal' }
 
-    assert_redirected_to (/#{signin_path}/)
+    assert_response 403
+    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
   end
 
   def test_toggle_enabled
@@ -71,6 +73,7 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
     @request.session[:user_id] = 2
     patch :toggle_enabled
 
-    assert_redirected_to (/#{signin_path}/)
+    assert_response 403
+    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
   end
 end
