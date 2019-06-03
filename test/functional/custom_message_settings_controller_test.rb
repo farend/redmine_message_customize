@@ -7,6 +7,7 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
   def setup
     @request.session[:user_id] = 1 # admin
     CustomMessageSetting.reload_translations!('en')
+    I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
   # custom_message_settings/edit
@@ -23,8 +24,7 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
   def test_edit_except_admin_user
     @request.session[:user_id] = 2
     get :edit
-    assert_response 403
-    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
+    assert_redirected_to (/#{signin_path}/)
   end
 
   def test_update_with_custom_messages
@@ -52,11 +52,25 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
     assert_select 'h2', :text => l(:label_custom_messages)
     assert_select 'div#errorExplanation'
   end
-  def test_edit_except_admin_user
+  def test_update_except_admin_user
     @request.session[:user_id] = 2
     get :update, params: { settings: {'custom_messages'=>{'label_home' => 'Home3'}}, lang: 'en', tab: 'normal' }
 
-    assert_response 403
-    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
+    assert_redirected_to (/#{signin_path}/)
+  end
+
+  def test_toggle_enabled
+    patch :toggle_enabled
+    assert_redirected_to edit_custom_message_settings_path
+    assert_equal l(:notice_disabled_customize), flash[:notice]
+
+    patch :toggle_enabled
+    assert_equal l(:notice_enabled_customize), flash[:notice]
+  end
+  def test_toggle_enabled_except_admin_user
+    @request.session[:user_id] = 2
+    patch :toggle_enabled
+
+    assert_redirected_to (/#{signin_path}/)
   end
 end
