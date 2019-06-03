@@ -1,1 +1,1 @@
-{ es: CustomMessageSetting.find_or_default.custom_messages('es') }
+{ es: CustomMessageSetting.find_or_default.custom_messages('es', true) }

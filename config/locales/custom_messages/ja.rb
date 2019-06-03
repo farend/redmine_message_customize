@@ -1,1 +1,1 @@
-{ ja: CustomMessageSetting.find_or_default.custom_messages('ja') }
+{ ja: CustomMessageSetting.find_or_default.custom_messages('ja', true) }

@@ -1,1 +1,1 @@
-{ he: CustomMessageSetting.find_or_default.custom_messages('he') }
+{ he: CustomMessageSetting.find_or_default.custom_messages('he', true) }

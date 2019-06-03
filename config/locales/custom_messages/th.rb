@@ -1,1 +1,1 @@
-{ th: CustomMessageSetting.find_or_default.custom_messages('th') }
+{ th: CustomMessageSetting.find_or_default.custom_messages('th', true) }

@@ -1,1 +1,1 @@
-{ bs: CustomMessageSetting.find_or_default.custom_messages('bs') }
+{ bs: CustomMessageSetting.find_or_default.custom_messages('bs', true) }

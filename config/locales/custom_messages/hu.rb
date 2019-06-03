@@ -1,1 +1,1 @@
-{ hu: CustomMessageSetting.find_or_default.custom_messages('hu') }
+{ hu: CustomMessageSetting.find_or_default.custom_messages('hu', true) }

@@ -1,1 +1,1 @@
-{ az: CustomMessageSetting.find_or_default.custom_messages('az') }
+{ az: CustomMessageSetting.find_or_default.custom_messages('az', true) }
