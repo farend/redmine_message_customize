@@ -1,0 +1,45 @@
+<div>
+  <%= select_tag 'select-key', customizable_name_options(@setting, lang), id: 'customizable-name-selector', :include_blank => true %><br>
+  <span class='icon icon-help'><%= l(:text_description_of_search_box) %></span>
+</div>
+<br>
+<div class='tabular'>
+  <%= customizable_name_input_fields(@setting, lang) %>
+</div>
+<%= javascript_tag do %>
+$(document).ready(function() {
+  setCustomNamesSelect2();
+});
+
+$('#customizable-name-selector').on('select2:select', function (e) {
+  const key = e.params.data.id;
+  const val = e.params.data.text;
+  const category = key.replace(/[0-9]/g, '').slice(0, -1);
+  const selector = '#edit-custom-names div#' + category;
+
+  if($(selector + ' input[name="settings[custom_names[' + key + ']]"]').length === 0){
+    $(selector).prepend('<p></p>');
+    $('<label>' + val + '</label><br>').appendTo($(selector + ' p:first'));
+    $('<input>').attr({
+      type: 'text',
+      value: val,
+      name: 'settings[custom_names[' + key + ']]',
+    }).appendTo($(selector + ' p:first'));
+    $('<a>').attr({
+       class: 'icon icon-del clear-key-link',
+       href: '#',
+       onclick: '$(this).closest("p").remove(); return false;'
+    }).appendTo($(selector + ' p:first'));
+    $('#customizable-name-selector').val('').change();
+    $('#customizable-name-selector option[value="' + key + '"]').prop("disabled", true).change();
+    setCustomNamesSelect2();
+  }
+});
+
+function setCustomNamesSelect2(){
+  $("#customizable-name-selector").select2({
+    width: '100%',
+    placeholder: '<%= l(:text_placeholder_choose_key) %>'
+  });
+}
+<% end %>

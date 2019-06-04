@@ -1,9 +1,12 @@
 class CustomMessageSettingsController < ApplicationController
   layout 'admin'
   before_action :require_admin, :set_custom_message_setting, :set_lang
-  require_sudo_mode :edit, :update, :toggle_enabled
+  require_sudo_mode :edit, :yaml_edit, :update, :toggle_enabled
 
   def edit
+  end
+
+  def yaml_edit
   end
 
   def update
@@ -11,6 +14,8 @@ class CustomMessageSettingsController < ApplicationController
 
     if setting_params.key?(:custom_messages) || params[:tab] == 'normal'
       @setting.update_with_custom_messages(setting_params[:custom_messages].try(:to_unsafe_h).try(:to_hash) || {}, @lang)
+    elsif setting_params.key?(:custom_names) || params[:tab] == 'names'
+      @setting.update_with_custom_names(setting_params[:custom_names].try(:to_unsafe_h).try(:to_hash) || {}, @lang)
     elsif setting_params.key?(:custom_messages_yaml)
       @setting.update_with_custom_messages_yaml(setting_params[:custom_messages_yaml])
     end
@@ -22,7 +27,7 @@ class CustomMessageSettingsController < ApplicationController
 
       redirect_to edit_custom_message_settings_path(tab: params[:tab], lang: @lang)
     else
-      render :edit
+      render :yaml_edit
     end
   end
 

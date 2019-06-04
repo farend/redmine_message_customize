@@ -1,0 +1,6 @@
+<%= form_tag custom_message_settings_path, method: :post do %>
+  <div id='edit-custom-messages'>
+    <%= render 'custom_message_settings/messages', lang: @lang %>
+  </div>
+  <%= submit_tag l(:button_save) %>
+<% end %>

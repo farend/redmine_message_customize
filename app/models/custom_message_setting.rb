@@ -23,6 +23,10 @@ class CustomMessageSetting < Setting
     end
   end
 
+  def custom_names(lang)
+    self.custom_messages(lang)['custom_object_name'] || {}
+  end
+
   def custom_messages_to_flatten_hash(lang=nil)
     self.class.flatten_hash(custom_messages(lang))
   end
@@ -50,6 +54,14 @@ class CustomMessageSetting < Setting
       end
 
     self.value = {custom_messages: (messages.present? ? messages : {})}
+    self.save
+  end
+
+  def update_with_custom_names(custom_names, lang)
+    custom_messages = self.custom_messages
+    custom_messages[lang]['custom_object_name'] = custom_names
+
+    self.value = {custom_messages: (custom_messages.present? ? custom_messages : {})}
     self.save
   end
 
@@ -141,12 +153,18 @@ class CustomMessageSetting < Setting
     custom_messages.values.compact.each do |val|
       custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
     end
+    custom_messages_hash = remove_custom_object_name_keys(custom_messages_hash)
+
     available_keys = self.class.flatten_hash(self.class.available_messages('en')).keys
     unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
     if unavailable_keys.present?
       self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
       false
     end
+  end
+
+  def remove_custom_object_name_keys(custom_messages)
+    custom_messages.reject{|k| k.to_s.include?('custom_object_name')}
   end
 
   def custom_message_languages_are_available

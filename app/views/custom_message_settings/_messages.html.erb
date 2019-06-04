@@ -9,7 +9,7 @@
 
 <%= javascript_tag do %>
 $(document).ready(function() {
-  setSelect2();
+  setCustomMessagesSelect2();
 });
 
 $('#key-selector').on('select2:select', function (e) {
@@ -30,11 +30,11 @@ $('#key-selector').on('select2:select', function (e) {
     }).appendTo($('#edit-custom-messages .tabular p:first'));
     $('#key-selector').val('').change();
     $('#key-selector option[value="' + key + '"]').prop("disabled", true).change();
-    setSelect2();
+    setCustomMessagesSelect2();
   }
 });
 
-function setSelect2(){
+function setCustomMessagesSelect2(){
   $("#key-selector").select2({
     width: '100%',
     placeholder: '<%= l(:text_placeholder_choose_key) %>',

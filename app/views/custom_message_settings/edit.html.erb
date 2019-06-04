@@ -5,9 +5,16 @@
 
 <% if @setting.errors.any? %>
   <%= error_messages_for(@setting) %>
+<% else %>
+  <p class='customize-action-menu'>
+    <span class='icon icon-settings'></span>
+    <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post %> /
+    <%= link_to(l(:label_yaml_edit), yaml_edit_custom_message_settings_path) %>
+  </p>
+
+  <label><%= l(:field_language) %>: </label>
+  <%= select_tag 'lang', options_for_select(languages_options, @lang), include_blank: true, data: {remote: true, url: url_for(action: :edit)}, onchange: '$("#ajax-indicator").show();' %>
+  <hr>
+
+  <%= render_tabs (@setting.errors.any? ? [] : [{name: 'messages', partial: 'messages_tab', label: 'label_messages_tab'}, {name: 'names', partial: 'names_tab', label: 'label_names_tab'}]) %>
 <% end %>
-<p class='toggle-enable'>
-  <span class='icon icon-settings'></span>
-  <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post %>
-</p>
-<%= render_tabs (@setting.errors.any? ? [] : [{name: 'normal', partial: 'normal_tab', label: 'label_normal_tab'}]) + [{name: 'yaml', partial: 'yaml_tab', label: 'label_yaml_tab'}] %>
