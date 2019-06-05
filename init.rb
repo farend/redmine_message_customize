@@ -1,8 +1,8 @@
-require_dependency 'issue_status_patch'
-require_dependency 'issue_category_patch'
-require_dependency 'issue_priority_patch'
-require_dependency 'tracker_patch'
-require_dependency 'custom_field_patch'
+require_dependency 'custom_messages/issue_status_patch'
+require_dependency 'custom_messages/issue_category_patch'
+require_dependency 'custom_messages/issue_priority_patch'
+require_dependency 'custom_messages/tracker_patch'
+require_dependency 'custom_messages/custom_field_patch'
 
 p = Redmine::Plugin.register :redmine_message_customize do
   name 'Redmine customize messages plugin'

@@ -17,7 +17,7 @@ class CustomMessageSetting < Setting
     end
 
     if messages.blank? || (check_enabled && !self.enabled?)
-      {}
+      { 'custom_object_name' => Hash[custom_names(lang).map { | k, v | [k, nil] }] }
     else
       messages
     end
