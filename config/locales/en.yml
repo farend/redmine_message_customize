@@ -1,10 +1,10 @@
 en:
   label_custom_messages: Message customize
   text_help_for_input_format: Please input the keyword you want to change in YAML format.
-  text_placeholder_template_case: 'example: When changing "Home" to "Home2"'
+  text_placeholder_template_case: 'example: When changing "Home" to "TOP"'
   text_placeholder_yaml_template: |
       en:
-        label_home: 'Home2'
+        label_home: 'TOP'
   text_placeholder_choose_key: Please select the message you want to change.
   text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
   error_unavailable_keys: The keys not present in Redmine are used.

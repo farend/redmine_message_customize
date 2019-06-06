@@ -1,10 +1,10 @@
 ja:
   label_custom_messages: メッセージのカスタマイズ
   text_help_for_input_format: ※ YAML形式で変更したい文言を入力してください
-  text_placeholder_template_case: 例) 「ホーム」を「ホーム2」に変更したい場合
+  text_placeholder_template_case: 例) 「ホーム」を「TOP」に変更したい場合
   text_placeholder_yaml_template: |
       ja:
-        label_home: 'ホーム2'
+        label_home: 'TOP'
   text_placeholder_choose_key: 変更したい文言を選択してください。
   text_description_of_search_box: 検索ボックスにキーワードを入力することで、選択肢を絞り込むことが出来ます。
   error_unavailable_keys: Redmineに存在しないキーが利用されています。
