@@ -1,5 +1,5 @@
 ja:
-  label_custom_messages: メッセージをカスタマイズする
+  label_custom_messages: メッセージのカスタマイズ
   text_help_for_input_format: ※ YAML形式で変更したい文言を入力してください
   text_placeholder_template_case: 例) 「ホーム」を「ホーム2」に変更したい場合
   text_placeholder_yaml_template: |
