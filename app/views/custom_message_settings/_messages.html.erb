@@ -12,9 +12,22 @@ $(document).ready(function() {
   setSelect2();
 });
 
+let currentSearchKeyword;
 $('#key-selector').on('select2:select', function (e) {
   var key = e.params.data.id;
   var val = e.params.data.text;
+  AddMessageInputField(key, val);
+}).on('select2:closing', function (e) {
+  currentSearchKeyword = $('.select2-search__field')[0].value;
+}).on('select2:open', function (e) {
+  setTimeout(function() {
+    if (currentSearchKeyword){
+      $('.select2-search__field').val(currentSearchKeyword).trigger('input');
+    }
+  }, 0);
+});
+
+function AddMessageInputField(key, val){
   if($('input[name="settings[custom_messages[' + key + ']]"]').length === 0){
     $('<p></p>').prependTo($('#edit-custom-messages .tabular'));
     $('<label>' + key + '</label><br>').appendTo($('#edit-custom-messages .tabular p:first'));
@@ -32,7 +45,7 @@ $('#key-selector').on('select2:select', function (e) {
     $('#key-selector option[value="' + key + '"]').prop("disabled", true).change();
     setSelect2();
   }
-});
+}
 
 function setSelect2(){
   $("#key-selector").select2({
