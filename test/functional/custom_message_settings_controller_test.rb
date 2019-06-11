@@ -28,6 +28,22 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
     assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
   end
 
+  def test_default_messages
+    get :default_messages, params: {lang: 'ja'}
+    assert_response :success
+
+    assert_select 'h2', :text => "#{l(:label_default_messages)}(config/locales/ja.yml)"
+    assert_select 'div.autoscroll' do
+      assert_select 'table.filecontent.syntaxhl'
+    end
+  end
+  def test_default_messages_except_admin_user
+    @request.session[:user_id] = 2
+    get :default_messages
+    assert_response 403
+    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
+  end
+
   def test_update_with_custom_messages
     assert_equal 'Home1', l(:label_home)
 

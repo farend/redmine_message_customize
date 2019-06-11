@@ -7,6 +7,7 @@ en:
         label_home: 'TOP'
   text_placeholder_choose_key: Please select the message you want to change.
   text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
+  text_for_your_reference: "If you do not know how to write, please refer to %{value}."
   error_unavailable_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.
   error_invalid_yaml_format: The format of yaml is invalid.
@@ -16,3 +17,4 @@ en:
   label_yaml_tab: YAML mode
   label_enable_customize: Enable customize
   label_disable_customize: Disable customize
+  label_default_messages: Default messages

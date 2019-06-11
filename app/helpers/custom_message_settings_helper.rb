@@ -19,4 +19,11 @@ module CustomMessageSettingsHelper
     end
     content
   end
+
+  def open_default_messages_window_link(lang)
+    link_to l(:label_default_messages),
+            default_messages_custom_message_settings_path(lang: lang),
+            class: 'icon icon-file text-plain',
+            onclick: "window.open(this.href,'#{l(:label_default_messages)}', 'height=800, width=500');return false;"
+  end
 end
