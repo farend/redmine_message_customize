@@ -104,15 +104,33 @@ class CustomMessageSetting < Setting
   end
 
   # {'date.formats.defaults' => '%m/%d/%Y'} to { date: { formats: { defaults: '%m/%d/%Y'}}}
-  def self.nested_hash(hash=nil)
+  def self.nested_hash(flatten_hash=nil)
     new_hash = {}
-    hash.each do |key, value|
-      h = value
-      h = YAML.load(value) if value.first == '[' && value.last == ']'
-      key.to_s.split('.').reverse_each do |k|
-        h = {k => h}
+    flatten_hash.each do |flatten_key, value|
+      nested_key_and_value = nil
+      formatted_value =
+        if value.first == '[' && value.last == ']'
+          # "[\"val1\", \"val2\"]" needs to be converted to ["val1", "val2"].
+          # TODO:
+          #   YAML.load can not convert strings like "[:year, :month, :day]".
+          #   So if an exception occurs it is converted to an array by string processing.
+          begin
+            YAML.load(value)
+          rescue Psych::SyntaxError
+            value.slice(1..-2).split(',').map{|v| v.strip}
+          end
+        else
+          value
+        end
+
+      # Example: flatten_key == 'date.formats.defaults', formatted_value == '%m/%d/%Y'
+      # 1. {'defaults' =>'%m/%d/%Y'}
+      # 2. {'formats' => {'defaults' =>'%m/%d/%Y'}}
+      # 3. {'date' => {'formats' => {'defaults' =>'%m/%d/%Y'}}}
+      flatten_key.to_s.split('.').reverse_each do |key|
+        nested_key_and_value = {key => (nested_key_and_value.nil? ? formatted_value : nested_key_and_value)}
       end
-      new_hash = new_hash.deep_merge(h)
+      new_hash = new_hash.deep_merge(nested_key_and_value)
     end
     new_hash
   end

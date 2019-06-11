@@ -122,6 +122,14 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal ({'time' => {'am' => 'foo'}}), nested_hash
   end
 
+  def test_flatten_hash_with_list_value_should_convert_string_to_array
+    nested_hash = CustomMessageSetting.nested_hash({'date.order' => "[\":year\", \":month\", \":day\"]"})
+    assert_equal ({'date' => {'order' => [':year', ':month', ':day']}}), nested_hash
+
+    nested_hash = CustomMessageSetting.nested_hash({'date.order' => "[:year, :month, :day]"})
+    assert_equal ({'date' => {'order' => [':year', ':month', ':day']}}), nested_hash
+  end
+
   def test_reload_translations!
     assert_nil I18n.backend.send(:translations)[:fr]
     CustomMessageSetting.reload_translations!(['fr'])
