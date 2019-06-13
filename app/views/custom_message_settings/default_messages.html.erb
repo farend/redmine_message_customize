@@ -3,7 +3,6 @@
 
 <label><%= l(:field_language) %>: </label>
 <%= select_tag 'lang', options_for_select(languages_options, @lang), onchange: "window.location.replace('#{default_messages_custom_message_settings_path}?lang=' + this.value)" %>
-<%= link_to l(:button_back), edit_custom_message_settings_path(lang: @lang) %>
 
 <% if @file_path.exist? %>
   <div class="autoscroll">
