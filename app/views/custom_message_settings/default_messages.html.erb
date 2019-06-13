@@ -9,7 +9,7 @@
     <table class="filecontent syntaxhl">
       <tbody>
       <% line_num = 1 %>
-      <% syntax_highlight_lines(@file_path.basename.to_s, Redmine::CodesetUtil.to_utf8_by_setting(File.open(@file_path).read)).each do |line| %>
+      <% syntax_highlight_lines(@file_path.basename.to_s, Redmine::CodesetUtil.to_utf8_by_setting(File.read(@file_path))).each do |line| %>
         <tr id="L<%= line_num %>">
           <th class="line-num">
             <a href="#L<%= line_num %>"><%= line_num %></a>
