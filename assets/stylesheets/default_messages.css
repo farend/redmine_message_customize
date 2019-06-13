@@ -69,3 +69,14 @@ table.filecontent tr:target th.line-num {
 table.filecontent tr:target td.line-code {
   background-color: #DDEEFF;
 }
+
+/* Hide unnecessary headers etc */
+body.action-default_messages #sidebar,
+body.action-default_messages #header,
+body.action-default_messages #top-menu {
+  display: none;
+}
+
+body.action-default_messages #main {
+  padding: 0px;
+}
