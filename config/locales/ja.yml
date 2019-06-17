@@ -7,6 +7,7 @@ ja:
         label_home: 'TOP'
   text_placeholder_choose_key: 変更したい文言を選択してください。
   text_description_of_search_box: 検索ボックスにキーワードを入力することで、選択肢を絞り込むことが出来ます。
+  text_for_your_reference: "もし書き方がわからない場合は、%{value}が参考になるはずです。"
   error_unavailable_keys: Redmineに存在しないキーが利用されています。
   error_unavailable_languages: Redmineで利用できない言語が利用されています。
   error_invalid_yaml_format: YAMLの形式が正しくありません。
@@ -16,3 +17,4 @@ ja:
   label_yaml_tab: YAMLモード
   label_enable_customize: カスタマイズを有効にする
   label_disable_customize: カスタマイズを無効にする
+  label_default_messages: デフォルトのメッセージ

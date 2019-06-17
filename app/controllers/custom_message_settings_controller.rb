@@ -1,9 +1,13 @@
 class CustomMessageSettingsController < ApplicationController
   layout 'admin'
   before_action :require_admin, :set_custom_message_setting, :set_lang
-  require_sudo_mode :edit, :update, :toggle_enabled
+  require_sudo_mode :edit, :update, :toggle_enabled, :default_messages
 
   def edit
+  end
+
+  def default_messages
+    @file_path = Rails.root.join('config', 'locales', "#{@lang}.yml")
   end
 
   def update

@@ -1,0 +1,26 @@
+<%= stylesheet_link_tag('default_messages', plugin: 'redmine_message_customize') %>
+<h2><%= l(:label_default_messages) %>(<%= "config/locales/#{@lang}.yml" %>)</h2>
+
+<label><%= l(:field_language) %>: </label>
+<%= select_tag 'lang', options_for_select(languages_options, @lang), onchange: "window.location.replace('#{default_messages_custom_message_settings_path}?lang=' + this.value)" %>
+
+<% if @file_path.exist? %>
+  <div class="autoscroll">
+    <table class="filecontent syntaxhl">
+      <tbody>
+      <% line_num = 1 %>
+      <% syntax_highlight_lines(@file_path.basename.to_s, Redmine::CodesetUtil.to_utf8_by_setting(File.read(@file_path))).each do |line| %>
+        <tr id="L<%= line_num %>">
+          <th class="line-num">
+            <a href="#L<%= line_num %>"><%= line_num %></a>
+          </th>
+          <td class="line-code">
+            <pre><%= line.html_safe %></pre>
+          </td>
+        </tr>
+        <% line_num += 1 %>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
