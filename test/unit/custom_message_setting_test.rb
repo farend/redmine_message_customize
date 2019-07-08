@@ -6,7 +6,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
   def setup
     @custom_message_setting = CustomMessageSetting.find(1)
-    CustomMessageSetting.reload_translations!('en')
+    MessageCustomize::Locale.reload!('en')
     I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
@@ -120,11 +120,5 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def test_flatten_hash_should_return_nest_hash
     nested_hash = CustomMessageSetting.nested_hash({:'time.am' => 'foo'})
     assert_equal ({'time' => {'am' => 'foo'}}), nested_hash
-  end
-
-  def test_reload_translations!
-    assert_nil I18n.backend.send(:translations)[:fr]
-    CustomMessageSetting.reload_translations!(['fr'])
-    assert_not_nil I18n.backend.send(:translations)[:fr]
   end
 end

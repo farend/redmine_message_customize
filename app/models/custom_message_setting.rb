@@ -13,7 +13,7 @@ class CustomMessageSetting < Setting
   def custom_messages(lang=nil, check_enabled=false)
     messages = self.value[:custom_messages] || self.value['custom_messages']
     if lang.present?
-      messages = messages[self.class.find_language(lang)]
+      messages = messages.with_indifferent_access[lang.to_s]
     end
 
     if messages.blank? || (check_enabled && !self.enabled?)
@@ -69,7 +69,7 @@ class CustomMessageSetting < Setting
     self.value = self.value.deep_merge({enabled: (!self.enabled?).to_s})
 
     if result = self.save
-      self.class.reload_translations!(self.using_languages)
+      MessageCustomize::Locale.reload!(self.using_languages)
     end
     result
   end
@@ -84,9 +84,9 @@ class CustomMessageSetting < Setting
   end
 
   def self.available_messages(lang)
-    messages = I18n.backend.send(:translations)[self.find_language(lang).to_s.to_sym]
+    messages = I18n.backend.send(:translations)[lang.to_s.to_sym]
     if messages.nil?
-      CustomMessageSetting.reload_translations!([lang])
+      MessageCustomize::Locale.reload!([lang])
       messages = I18n.backend.send(:translations)[lang.to_s.to_sym] || {}
     end
     self.flatten_hash(messages)
@@ -117,21 +117,6 @@ class CustomMessageSetting < Setting
     new_hash
   end
 
-  def self.reload_translations!(languages)
-    paths = I18n.load_path.select {|path| self.find_language(languages).include?(File.basename(path, '.*').to_s)}
-    I18n.backend.load_translations(paths)
-  end
-
-  def self.find_language(language=nil)
-    if language.is_a?(Array)
-      language.select{|l| I18n.available_locales.include?(l.to_s.to_sym)}.map(&:to_s).compact
-    elsif language.present? && I18n.available_locales.include?(language.to_s.to_sym)
-      language.to_s
-    else
-      nil
-    end
-  end
-
   private
 
   def custom_message_keys_are_available
@@ -154,7 +139,7 @@ class CustomMessageSetting < Setting
 
     unavailable_languages =
       custom_messages.keys.compact.reject do |language|
-        I18n.available_locales.include?(language.to_sym)
+        MessageCustomize::Locale.available_locales.include?(language.to_sym)
       end
     if unavailable_languages.present?
       self.errors.add(:base, l(:error_unavailable_languages) + " [#{unavailable_languages.join(', ')}]")

@@ -18,7 +18,7 @@ class CustomMessageSettingsController < ApplicationController
     if @setting.errors.blank?
       flash[:notice] = l(:notice_successful_update)
       languages += @setting.using_languages
-      CustomMessageSetting.reload_translations!(languages)
+      MessageCustomize::Locale.reload!(languages)
 
       redirect_to edit_custom_message_settings_path(tab: params[:tab], lang: @lang)
     else
@@ -46,6 +46,6 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   def set_lang
-    @lang = CustomMessageSetting.find_language(params[:lang].presence || User.current.language.presence || 'en')
+    @lang = MessageCustomize::Locale.find_language(params[:lang].presence || User.current.language.presence || 'en')
   end
 end
