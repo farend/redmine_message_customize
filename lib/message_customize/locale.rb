@@ -13,8 +13,10 @@ module MessageCustomize
       end
 
       def find_language(language=nil)
+        return nil if language.nil?
+
         if language.is_a?(Array)
-          language.select{|l| self.available_locales.include?(:"#{l}")}.map(&:to_s).compact
+          language.select{|l| self.find_language(:"#{l}").present?}.map(&:to_s).uniq
         elsif language.present? && self.available_locales.include?(:"#{language}")
           language.to_s
         end
