@@ -3,7 +3,7 @@ module MessageCustomize
 
     class << self
       def available_locales
-        I18n.load_path.map {|path| File.basename(path, '.*')}.uniq.sort.map(&:to_sym)
+        @locales ||= I18n.load_path.map {|path| File.basename(path, '.*')}.uniq.sort.map(&:to_sym)
       end
 
       def reload!(*languages)
