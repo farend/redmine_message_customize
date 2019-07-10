@@ -10,7 +10,7 @@ class LocaleTest < ActiveSupport::TestCase
     setting.save
 
     assert_equal 'Home1', I18n.backend.send(:translations)[:en][:label_home]
-    MessageCustomize::Locale.reload!(['en'])
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Changed home', I18n.backend.send(:translations)[:en][:label_home]
   end
 

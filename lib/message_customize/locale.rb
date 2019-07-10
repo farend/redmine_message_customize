@@ -6,8 +6,9 @@ module MessageCustomize
         I18n.load_path.map {|path| File.basename(path, '.*')}.uniq.sort.map(&:to_sym)
       end
 
-      def reload!(languages)
-        paths = I18n.load_path.select {|path| self.find_language(languages).include?(File.basename(path, '.*').to_s)}
+      def reload!(*languages)
+        available_languages = self.find_language(languages.flatten)
+        paths = I18n.load_path.select {|path| available_languages.include?(File.basename(path, '.*').to_s)}
         I18n.backend.load_translations(paths)
       end
 

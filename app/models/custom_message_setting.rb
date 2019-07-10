@@ -87,7 +87,7 @@ class CustomMessageSetting < Setting
     lang = :"#{lang}"
     messages = I18n.backend.send(:translations)[lang]
     if messages.nil?
-      MessageCustomize::Locale.reload!([lang])
+      MessageCustomize::Locale.reload!(lang)
       messages = I18n.backend.send(:translations)[lang] || {}
     end
     self.flatten_hash(messages)
