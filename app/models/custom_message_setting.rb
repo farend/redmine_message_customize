@@ -84,10 +84,11 @@ class CustomMessageSetting < Setting
   end
 
   def self.available_messages(lang)
-    messages = I18n.backend.send(:translations)[lang.to_s.to_sym]
+    lang = :"#{lang}"
+    messages = I18n.backend.send(:translations)[lang]
     if messages.nil?
       MessageCustomize::Locale.reload!([lang])
-      messages = I18n.backend.send(:translations)[lang.to_s.to_sym] || {}
+      messages = I18n.backend.send(:translations)[lang] || {}
     end
     self.flatten_hash(messages)
   end
