@@ -28,8 +28,13 @@ class CustomMessageSettingsController < ApplicationController
     else
       render :edit
     end
-  rescue ActiveRecord::ValueTooLong
-    render_error l(:error_value_too_long)
+
+  rescue => e
+    if e.is_a?(ActiveRecord::StatementInvalid) || (Object.const_defined?('ActiveRecord::ValueTooLong') && e.is_a?(ActiveRecord::ValueTooLong))
+      render_error l(:error_value_too_long)
+    else
+      raise e
+    end
   end
 
   def toggle_enabled
