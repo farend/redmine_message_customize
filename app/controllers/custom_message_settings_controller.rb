@@ -28,6 +28,8 @@ class CustomMessageSettingsController < ApplicationController
     else
       render :edit
     end
+  rescue ActiveRecord::ValueTooLong
+    render_error l(:error_value_too_long)
   end
 
   def toggle_enabled
