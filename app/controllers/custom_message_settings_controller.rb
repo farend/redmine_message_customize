@@ -28,6 +28,10 @@ class CustomMessageSettingsController < ApplicationController
     else
       render :edit
     end
+
+  # Catch an exception that occurs when the value field capacity is exceeded (ActiveRecord::ValueTooLong)
+  rescue ActiveRecord::StatementInvalid
+    render_error l(:error_value_too_long)
   end
 
   def toggle_enabled
