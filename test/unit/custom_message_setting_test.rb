@@ -13,7 +13,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def test_validate_with_not_available_keys_should_return_false
     @custom_message_setting.value = { custom_messages: { 'en' => {'foobar' => 'foobar' }} }
     assert_not @custom_message_setting.save
-    assert_equal "#{l(:error_unavailable_keys)} keys: [foobar]", @custom_message_setting.errors[:base].first
+    assert_equal "#{l(:error_unavailable_keys)} keys: [en.foobar]", @custom_message_setting.errors[:base].first
   end
 
   def test_validate_with_not_available_languages_should_return_false

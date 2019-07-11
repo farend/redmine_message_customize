@@ -123,12 +123,12 @@ class CustomMessageSetting < Setting
   def custom_message_keys_are_available
     return false if !value[:custom_messages].is_a?(Hash) || errors.present?
 
-    custom_messages_hash = {}
-    custom_messages.values.compact.each do |val|
-      custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
+    unavailable_keys = []
+    custom_messages.each do |lang, val|
+      available_keys = self.class.flatten_hash(self.class.available_messages(lang)).keys
+      unavailable_keys += self.class.flatten_hash(val).keys.reject{|k| available_keys.include?(:"#{k}")}.map{|k| "#{lang}.#{k}"}
     end
-    available_keys = self.class.flatten_hash(self.class.available_messages('en')).keys
-    unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
+
     if unavailable_keys.present?
       self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
       false
