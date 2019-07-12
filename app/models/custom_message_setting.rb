@@ -83,16 +83,6 @@ class CustomMessageSetting < Setting
     end
   end
 
-  def self.available_messages(lang)
-    lang = :"#{lang}"
-    messages = I18n.backend.send(:translations)[lang]
-    if messages.nil?
-      MessageCustomize::Locale.reload!(lang)
-      messages = I18n.backend.send(:translations)[lang] || {}
-    end
-    self.flatten_hash(messages)
-  end
-
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
     hash = self.to_hash unless hash
@@ -127,7 +117,7 @@ class CustomMessageSetting < Setting
     custom_messages.values.compact.each do |val|
       custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
     end
-    available_keys = self.class.flatten_hash(self.class.available_messages('en')).keys
+    available_keys = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en')).keys
     unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
     if unavailable_keys.present?
       self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")

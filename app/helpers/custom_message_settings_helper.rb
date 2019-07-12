@@ -1,7 +1,8 @@
 module CustomMessageSettingsHelper
   def available_message_options(setting, lang)
     options = [['', '']] +
-                CustomMessageSetting.available_messages(lang).map{|k, v| ["#{k}: #{v}", k]}
+                CustomMessageSetting.flatten_hash(MessageCustomize::Locale.available_messages(lang))
+                .map{|k, v| ["#{k}: #{v}", k]}
 
     options_for_select(options, disabled: setting.custom_messages_to_flatten_hash(lang).keys)
   end
