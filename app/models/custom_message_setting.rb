@@ -114,7 +114,7 @@ class CustomMessageSetting < Setting
     return false if !value[:custom_messages].is_a?(Hash) || errors.present?
 
     en_translation_hash = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en'))
-    custom_message_keys = custom_messages.values.sum{|val| self.class.flatten_hash(val).keys}.uniq
+    custom_message_keys = custom_messages.values.sum([]){|val| self.class.flatten_hash(val).keys}.uniq
 
     unused_keys = custom_message_keys.reject{|k| en_translation_hash.keys.include?(:"#{k}")}
     unusable_type_of_keys = (custom_message_keys - unused_keys).reject{|k| en_translation_hash[:"#{k}"].is_a?(String)}
