@@ -113,15 +113,17 @@ class CustomMessageSetting < Setting
   def custom_message_keys_are_available
     return false if !value[:custom_messages].is_a?(Hash) || errors.present?
 
-    custom_messages_hash = {}
-    custom_messages.values.compact.each do |val|
-      custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
+    en_translation_hash = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en'))
+    custom_message_keys = custom_messages.values.sum{|val| self.class.flatten_hash(val).keys}.uniq
+
+    unused_keys = custom_message_keys.reject{|k| en_translation_hash.keys.include?(:"#{k}")}
+    unusable_type_of_keys = (custom_message_keys - unused_keys).reject{|k| en_translation_hash[:"#{k}"].is_a?(String)}
+
+    if unused_keys.present?
+      errors.add(:base, "#{l(:error_unused_keys)} keys: [#{unused_keys.join(', ')}]")
     end
-    available_keys = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en')).keys
-    unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
-    if unavailable_keys.present?
-      self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
-      false
+    if unusable_type_of_keys.present?
+      errors.add(:base, "#{l(:error_unusable_type_of_keys)} keys: [#{unusable_type_of_keys.join(', ')}]")
     end
   end
 

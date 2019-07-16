@@ -10,15 +10,21 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
-  def test_validate_with_not_available_keys_should_return_false
-    @custom_message_setting.value = { custom_messages: { 'en' => {'foobar' => 'foobar' }} }
-    assert_not @custom_message_setting.save
-    assert_equal "#{l(:error_unavailable_keys)} keys: [foobar]", @custom_message_setting.errors[:base].first
+  def test_validate_with_unused_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'foo' => 'bar' }} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unused_keys)} keys: [foo]", @custom_message_setting.errors[:base].first
   end
 
-  def test_validate_with_not_available_languages_should_return_false
+  def test_validate_with_unusable_type_of_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'date' => {'order' => 'foobar' }}} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unusable_type_of_keys)} keys: [date.order]", @custom_message_setting.errors[:base].first
+  end
+
+  def test_validate_with_not_available_languages_should_invalid
     @custom_message_setting.value = { custom_messages: { 'foo' => {'label_home' => 'Home' }} }
-    assert_not @custom_message_setting.save
+    assert_not @custom_message_setting.valid?
     assert_equal "#{l(:error_unavailable_languages)} [foo]", @custom_message_setting.errors[:base].first
   end
 

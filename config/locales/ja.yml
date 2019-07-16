@@ -8,8 +8,9 @@ ja:
   text_placeholder_choose_key: 変更したい文言を選択してください。
   text_description_of_search_box: 検索ボックスにキーワードを入力することで、選択肢を絞り込むことが出来ます。
   text_for_your_reference: "もし書き方がわからない場合は、%{value}が参考になるはずです。"
-  error_unavailable_keys: Redmineに存在しないキーが利用されています。
+  error_unused_keys: Redmineに存在しないキーが利用されています。
   error_unavailable_languages: Redmineで利用できない言語が利用されています。
+  error_unusable_type_of_keys: このプラグインでは文字列以外の値をカスタマイズすることは出来ません。カスタマイズしたい場合はconfig/locales以下のファイルを直接書き換えてください。
   error_invalid_yaml_format: YAMLの形式が正しくありません。
   error_value_too_long: "カスタマイズするメッセージが多すぎるため保存できませんでした。カスタマイズするメッセージを減らしてください。"
   notice_enabled_customize: メッセージのカスタマイズを有効に変更しました。
