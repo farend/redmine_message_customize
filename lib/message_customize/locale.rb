@@ -26,17 +26,8 @@ module MessageCustomize
 
       def available_messages(lang)
         lang = :"#{lang}"
-        if @available_messages[lang].present?
-          @available_messages[lang]
-        else
-          messages = I18n.backend.send(:translations)[lang]
-          if messages.nil?
-            MessageCustomize::Locale.reload!(lang)
-            messages = I18n.backend.send(:translations)[lang] || {}
-          end
-          @available_messages[lang] = messages
-          messages
-        end
+        self.reload!(lang) if @available_messages[lang].blank?
+        @available_messages[lang] || {}
       end
     end
   end
