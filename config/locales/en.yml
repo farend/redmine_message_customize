@@ -10,7 +10,7 @@ en:
   text_for_your_reference: "If you do not know how to write, please refer to %{value}."
   error_unused_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.
-  error_unusable_type_of_keys: This plugin can not customize values other than string..
+  error_unusable_type_of_keys: This plugin can not customize values other than string.
   error_invalid_yaml_format: The format of yaml is invalid.
   error_value_too_long: "Could not save because there are too many custom messages. Please reduce the amount of messages custom messages."
   notice_enabled_customize: Successful in enable messages customization.
