@@ -1,0 +1,41 @@
+version: 2.1
+
+orbs:
+  redmine: agileware-jp/redmine-plugin@0.0.10
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - redmine/download:
+          name: redmine40-download
+          redmine_version: '4.0.4'
+      - redmine/download:
+          name: redmine34-download
+          redmine_version: '3.4.11'
+      - redmine/download:
+          name: redmine33-download
+          redmine_version: '3.3.9'
+      - redmine/download:
+          name: redmine32-download
+          redmine_version: '3.2.9'
+      - redmine/test:
+          name: redmine40
+          before-setup: [redmine/generate_database_yml-pg]
+          executor: redmine/ruby-26-pg
+          requires: [redmine40-download]
+      - redmine/test:
+          name: redmine34
+          before-setup: [redmine/generate_database_yml-pg]
+          executor: redmine/ruby-24-pg
+          requires: [redmine34-download]
+      - redmine/test:
+          name: redmine33
+          before-setup: [redmine/generate_database_yml-pg]
+          executor: redmine/ruby-23-pg
+          requires: [redmine33-download]
+      - redmine/test:
+          name: redmine32
+          before-setup: [redmine/generate_database_yml-pg]
+          executor: redmine/ruby-22-pg
+          requires: [redmine32-download]
