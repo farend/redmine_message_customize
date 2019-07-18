@@ -98,7 +98,6 @@ class CustomMessageSetting < Setting
     new_hash = {}
     hash.each do |key, value|
       h = value
-      h = YAML.load(value) if value.first == '[' && value.last == ']'
       key.to_s.split('.').reverse_each do |k|
         h = {k => h}
       end
