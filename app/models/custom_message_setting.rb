@@ -12,11 +12,12 @@ class CustomMessageSetting < Setting
 
   def custom_messages(lang=nil, check_enabled=false)
     messages = self.value[:custom_messages] || self.value['custom_messages']
+
     if lang.present?
-      messages = messages.with_indifferent_access[lang.to_s]
+      messages = messages[lang.to_s]
     end
 
-    if messages.blank? || (check_enabled && !self.enabled?)
+    if messages.nil? || (check_enabled && !self.enabled?)
       {}
     else
       messages
@@ -28,13 +29,11 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages_to_yaml
-    messages = self.custom_messages
-    if messages.blank?
-      ''
-    elsif messages.is_a?(Hash)
-      YAML.dump(messages)
+    if yaml = @invalid_yaml
+      @invalid_yaml = nil
+      yaml
     else
-      messages
+      custom_messages.present? ? YAML.dump(custom_messages) : ''
     end
   end
 
@@ -49,20 +48,19 @@ class CustomMessageSetting < Setting
         original_custom_messages
       end
 
-    self.value = {custom_messages: (messages.present? ? messages : {})}
+    self.value = {custom_messages: messages.presence || {}}
     self.save
   end
 
   def update_with_custom_messages_yaml(yaml)
-    begin
-      messages = YAML.load(yaml)
-      @errs = {base: l(:error_invalid_yaml_format) } if !messages.is_a?(Hash) && messages.present?
-      self.value = {custom_messages: (messages.present? ? messages : {})}
-    rescue => e
-      @errs = {base: e.message}
-      self.value = {custom_messages: yaml}
-    end
+    messages = YAML.load(yaml)
+    raise l(:error_invalid_yaml_format) if messages.present? && !messages.is_a?(Hash)
+    self.value = {custom_messages: messages.presence || {}}
     self.save
+  rescue => e
+    @errs = {base: e.message}
+    @invalid_yaml = yaml
+    self.valid?
   end
 
   def toggle_enabled!
