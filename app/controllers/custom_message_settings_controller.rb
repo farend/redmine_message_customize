@@ -45,6 +45,7 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   private
+
   def set_custom_message_setting
     @setting = CustomMessageSetting.find_or_default
   end

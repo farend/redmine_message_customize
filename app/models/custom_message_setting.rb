@@ -85,7 +85,8 @@ class CustomMessageSetting < Setting
 
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
-    hash = self.to_hash unless hash
+    hash ||= self.to_hash
+
     hash.each_with_object({}) do |(key, value), content|
       next self.flatten_hash(value).each do |k, v|
         content["#{key}.#{k}".intern] = v
@@ -111,7 +112,7 @@ class CustomMessageSetting < Setting
   private
 
   def custom_message_keys_are_available
-    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
+    return if errors.present?
 
     en_translation_hash = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en'))
     custom_message_keys = custom_messages.values.inject([]){|ar, val| ar + self.class.flatten_hash(val).keys}.uniq
@@ -128,7 +129,7 @@ class CustomMessageSetting < Setting
   end
 
   def custom_message_languages_are_available
-    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
+    return if errors.present?
 
     unavailable_languages =
       custom_messages.keys.compact.reject do |language|
@@ -136,11 +137,12 @@ class CustomMessageSetting < Setting
       end
     if unavailable_languages.present?
       self.errors.add(:base, l(:error_unavailable_languages) + " [#{unavailable_languages.join(', ')}]")
-      false
     end
   end
 
   def convertible_to_yaml
+    return if errors.present?
+
     YAML.dump(self.value[:custom_messages])
   end
 
@@ -150,7 +152,6 @@ class CustomMessageSetting < Setting
         self.errors.add(key, value)
       end
       @errs = nil
-      false
     end
   end
 end
