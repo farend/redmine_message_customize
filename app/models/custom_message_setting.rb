@@ -50,6 +50,9 @@ class CustomMessageSetting < Setting
     messages = YAML.load(yaml)
     self.value = self.value.deep_merge({custom_messages: messages.presence || {}})
     self.save
+  rescue Psych::SyntaxError => e
+    self.value = self.value.merge({custom_messages: yaml})
+    errors.add(:base, e.message)
   end
 
   def toggle_enabled!
@@ -134,9 +137,8 @@ class CustomMessageSetting < Setting
   end
 
   def convertible_to_yaml
-    return if errors.present?
+    errors.add(:base, l(:error_invalid_yaml_format)) if raw_custom_messages.present? && !raw_custom_messages.is_a?(Hash)
 
-    messages = raw_custom_messages
-    errors.add(:base, l(:error_invalid_yaml_format)) if messages.present? && !messages.is_a?(Hash)
+    YAML.dump(raw_custom_messages)
   end
 end
