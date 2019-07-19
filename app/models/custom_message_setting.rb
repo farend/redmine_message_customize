@@ -42,13 +42,13 @@ class CustomMessageSetting < Setting
         original_custom_messages
       end
 
-    self.value = self.value.deep_merge({custom_messages: messages.presence || {}})
+    self.value = self.value.merge({custom_messages: messages.presence || {}})
     self.save
   end
 
   def update_with_custom_messages_yaml(yaml)
     messages = YAML.load(yaml)
-    self.value = self.value.deep_merge({custom_messages: messages.presence || {}})
+    self.value = self.value.merge({custom_messages: messages.presence || {}})
     self.save
   rescue Psych::SyntaxError => e
     self.value = self.value.merge({custom_messages: yaml})
