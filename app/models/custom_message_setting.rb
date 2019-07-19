@@ -75,7 +75,8 @@ class CustomMessageSetting < Setting
 
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
-    hash ||= self.to_hash
+    return hash unless hash.is_a?(Hash)
+    hash ||= hash.to_hash
 
     hash.each_with_object({}) do |(key, value), content|
       next self.flatten_hash(value).each do |k, v|
