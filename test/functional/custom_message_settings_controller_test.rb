@@ -1,8 +1,9 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CustomMessageSettingsControllerTest < Redmine::ControllerTest
+class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? Redmine::ControllerTest : ActionController::TestCase
   fixtures :custom_message_settings, :users
   include Redmine::I18n
+  prepend ::RailsKwargsTesting::ControllerMethods if defined?(RailsKwargsTesting)
 
   def setup
     @request.session[:user_id] = 1 # admin
