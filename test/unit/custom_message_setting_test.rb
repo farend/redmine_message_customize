@@ -10,16 +10,28 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
-  def test_validate_with_not_available_keys_should_return_false
-    @custom_message_setting.value = { custom_messages: { 'en' => {'foobar' => 'foobar' }} }
-    assert_not @custom_message_setting.save
-    assert_equal "#{l(:error_unavailable_keys)} keys: [foobar]", @custom_message_setting.errors[:base].first
+  def test_validate_with_unused_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'foo' => 'bar' }} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unused_keys)} keys: [foo]", @custom_message_setting.errors[:base].first
   end
 
-  def test_validate_with_not_available_languages_should_return_false
+  def test_validate_with_unusable_type_of_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'date' => {'order' => 'foobar' }}} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unusable_type_of_keys)} keys: [date.order]", @custom_message_setting.errors[:base].first
+  end
+
+  def test_validate_with_not_available_languages_should_invalid
     @custom_message_setting.value = { custom_messages: { 'foo' => {'label_home' => 'Home' }} }
-    assert_not @custom_message_setting.save
+    assert_not @custom_message_setting.valid?
     assert_equal "#{l(:error_unavailable_languages)} [foo]", @custom_message_setting.errors[:base].first
+  end
+
+  def test_validate_with_invalid_yaml_should_invalid
+    @custom_message_setting.value = { custom_messages: "---\nen:\n  label_home: Home3\ninvalid-string" }
+    assert_not @custom_message_setting.valid?
+    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
   def test_find_or_default
@@ -79,11 +91,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     yaml = "---\nen:\n  label_home: Home3"
     assert @custom_message_setting.update_with_custom_messages_yaml(yaml)
     assert_equal ({ 'label_home' => 'Home3' }), @custom_message_setting.custom_messages('en')
-  end
-  def test_update_with_custom_messages_yaml_if_yaml_is_invalid
-    yaml = "---\nen:\n  label_home: Home3\ninvalid-string"
-    assert_not @custom_message_setting.update_with_custom_messages_yaml(yaml)
-    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
   def test_toggle_enabled!

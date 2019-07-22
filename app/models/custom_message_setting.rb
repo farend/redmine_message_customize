@@ -1,5 +1,5 @@
 class CustomMessageSetting < Setting
-  validate :add_errors, :convertible_to_yaml,
+  validate :convertible_to_yaml,
            :custom_message_languages_are_available, :custom_message_keys_are_available
 
   def self.find_or_default
@@ -11,16 +11,11 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages(lang=nil, check_enabled=false)
-    messages = self.value[:custom_messages] || self.value['custom_messages']
-    if lang.present?
-      messages = messages.with_indifferent_access[lang.to_s]
-    end
+    return {} if check_enabled && !self.enabled?
 
-    if messages.blank? || (check_enabled && !self.enabled?)
-      {}
-    else
-      messages
-    end
+    messages = raw_custom_messages
+    messages = messages[lang.to_s] if lang.present?
+    messages || {}
   end
 
   def custom_messages_to_flatten_hash(lang=nil)
@@ -28,13 +23,11 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages_to_yaml
-    messages = self.custom_messages
-    if messages.blank?
-      ''
-    elsif messages.is_a?(Hash)
-      YAML.dump(messages)
+    messages = custom_messages
+    if messages.is_a?(Hash)
+      messages.present? ? YAML.dump(messages) : ''
     else
-      messages
+      raw_custom_messages
     end
   end
 
@@ -49,24 +42,17 @@ class CustomMessageSetting < Setting
         original_custom_messages
       end
 
-    self.value = {custom_messages: (messages.present? ? messages : {})}
+    self.custom_messages = messages
     self.save
   end
 
   def update_with_custom_messages_yaml(yaml)
-    begin
-      messages = YAML.load(yaml)
-      @errs = {base: l(:error_invalid_yaml_format) } if !messages.is_a?(Hash) && messages.present?
-      self.value = {custom_messages: (messages.present? ? messages : {})}
-    rescue => e
-      @errs = {base: e.message}
-      self.value = {custom_messages: yaml}
-    end
+    self.custom_messages = yaml
     self.save
   end
 
   def toggle_enabled!
-    self.value = self.value.deep_merge({enabled: (!self.enabled?).to_s})
+    self.value = self.value.merge({enabled: (!self.enabled?).to_s})
 
     if result = self.save
       MessageCustomize::Locale.reload!(self.using_languages)
@@ -85,10 +71,11 @@ class CustomMessageSetting < Setting
 
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
-    hash = self.to_hash unless hash
+    return hash unless hash.is_a?(Hash)
+
     hash.each_with_object({}) do |(key, value), content|
       next self.flatten_hash(value).each do |k, v|
-        content["#{key}.#{k}".intern] = v
+        content[:"#{key}.#{k}"] = v
       end if value.is_a? Hash
       content[key] = value
     end
@@ -99,7 +86,6 @@ class CustomMessageSetting < Setting
     new_hash = {}
     hash.each do |key, value|
       h = value
-      h = YAML.load(value) if value.first == '[' && value.last == ']'
       key.to_s.split('.').reverse_each do |k|
         h = {k => h}
       end
@@ -110,45 +96,58 @@ class CustomMessageSetting < Setting
 
   private
 
-  def custom_message_keys_are_available
-    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
+  def raw_custom_messages
+    self.value[:custom_messages] || self.value['custom_messages']
+  end
 
-    custom_messages_hash = {}
-    custom_messages.values.compact.each do |val|
-      custom_messages_hash = self.class.flatten_hash(custom_messages_hash.merge(val)) if val.is_a?(Hash)
+  def custom_messages=(messages)
+    messages = YAML.load("#{messages}") unless messages.is_a?(Hash)
+    self.value = self.value.merge({custom_messages: messages.presence || {}})
+  rescue Psych::SyntaxError => e
+    self.value = self.value.merge({custom_messages: messages})
+  end
+
+  def custom_message_keys_are_available
+    return if errors.present?
+
+    en_translation_hash = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en'))
+    custom_message_keys =
+      custom_messages.values.each_with_object([]){|val, ar|
+        ar.concat(self.class.flatten_hash(val).keys)
+      }.uniq
+
+    unused_keys = custom_message_keys.reject{|k| en_translation_hash.keys.include?(:"#{k}")}
+    unusable_type_of_keys = (custom_message_keys - unused_keys).reject{|k| en_translation_hash[:"#{k}"].is_a?(String)}
+
+    if unused_keys.present?
+      errors.add(:base, "#{l(:error_unused_keys)} keys: [#{unused_keys.join(', ')}]")
     end
-    available_keys = self.class.flatten_hash(MessageCustomize::Locale.available_messages('en')).keys
-    unavailable_keys = custom_messages_hash.keys.reject{|k| available_keys.include?(k.to_sym)}
-    if unavailable_keys.present?
-      self.errors.add(:base, l(:error_unavailable_keys) + " keys: [#{unavailable_keys.join(', ')}]")
-      false
+    if unusable_type_of_keys.present?
+      errors.add(:base, "#{l(:error_unusable_type_of_keys)} keys: [#{unusable_type_of_keys.join(', ')}]")
     end
   end
 
   def custom_message_languages_are_available
-    return false if !value[:custom_messages].is_a?(Hash) || errors.present?
+    return if errors.present?
 
     unavailable_languages =
       custom_messages.keys.compact.reject do |language|
         MessageCustomize::Locale.available_locales.include?(language.to_sym)
       end
     if unavailable_languages.present?
-      self.errors.add(:base, l(:error_unavailable_languages) + " [#{unavailable_languages.join(', ')}]")
-      false
+      errors.add(:base, l(:error_unavailable_languages) + " [#{unavailable_languages.join(', ')}]")
     end
   end
 
   def convertible_to_yaml
-    YAML.dump(self.value[:custom_messages])
-  end
-
-  def add_errors
-    if @errs.present?
-      @errs.each do |key, value|
-        self.errors.add(key, value)
+    raw_messages = raw_custom_messages
+    if raw_messages.present? && !raw_messages.is_a?(Hash)
+      begin
+        YAML.load("#{raw_messages}")
+        errors.add(:base, l(:error_invalid_yaml_format))
+      rescue Psych::SyntaxError => e
+        errors.add(:base, e.message)
       end
-      @errs = nil
-      false
     end
   end
 end
