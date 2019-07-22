@@ -66,7 +66,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     @custom_message_setting.value = { custom_messages: {} }
     assert_equal '', @custom_message_setting.custom_messages_to_yaml
 
-    @custom_message_setting.instance_variable_set('@invalid_yaml', 'test')
+    @custom_message_setting.value = { custom_messages: 'test' }
     assert_equal 'test', @custom_message_setting.custom_messages_to_yaml
   end
 
@@ -89,7 +89,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def test_update_with_custom_messages_yaml_if_yaml_is_invalid
     yaml = "---\nen:\n  label_home: Home3\ninvalid-string"
     assert_not @custom_message_setting.update_with_custom_messages_yaml(yaml)
-    assert_equal "---\nen:\n  label_home: Home3\ninvalid-string", @custom_message_setting.instance_variable_get('@invalid_yaml')
     assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
