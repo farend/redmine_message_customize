@@ -53,6 +53,7 @@ class CustomMessageSetting < Setting
   rescue Psych::SyntaxError => e
     self.value = self.value.merge({custom_messages: yaml})
     errors.add(:base, e.message)
+    false
   end
 
   def toggle_enabled!
