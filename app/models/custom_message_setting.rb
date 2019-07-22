@@ -23,8 +23,8 @@ class CustomMessageSetting < Setting
   end
 
   def custom_messages_to_yaml
-    if custom_messages.is_a?(Hash)
-      messages = custom_messages
+    messages = custom_messages
+    if messages.is_a?(Hash)
       messages.present? ? YAML.dump(messages) : ''
     else
       raw_custom_messages
