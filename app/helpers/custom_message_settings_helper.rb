@@ -9,7 +9,8 @@ module CustomMessageSettingsHelper
   end
 
   def normal_mode_input_fields(setting, lang)
-    return '' if setting.value[:custom_messages].is_a?(String) || setting.value[:custom_messages].blank?
+    return '' if setting.custom_messages.is_a?(String) || setting.custom_messages.blank?
+
     content = ActiveSupport::SafeBuffer.new
     custom_messages_hash = setting.custom_messages_to_flatten_hash(lang.to_s)
     custom_messages_hash.each do |k, v|
