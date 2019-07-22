@@ -141,8 +141,14 @@ class CustomMessageSetting < Setting
   end
 
   def convertible_to_yaml
-    errors.add(:base, l(:error_invalid_yaml_format)) if raw_custom_messages.present? && !raw_custom_messages.is_a?(Hash)
-
-    YAML.dump(raw_custom_messages)
+    raw_messages = raw_custom_messages
+    if raw_messages.present? && !raw_messages.is_a?(Hash)
+      begin
+        messages = YAML.load("#{raw_messages}")
+        errors.add(:base, l(:error_invalid_yaml_format))
+      rescue Psych::SyntaxError => e
+        errors.add(:base, e.message)
+      end
+    end
   end
 end

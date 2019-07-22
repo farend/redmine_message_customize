@@ -28,6 +28,12 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal "#{l(:error_unavailable_languages)} [foo]", @custom_message_setting.errors[:base].first
   end
 
+  def test_validate_with_invalid_yaml_should_invalid
+    @custom_message_setting.value = { custom_messages: "---\nen:\n  label_home: Home3\ninvalid-string" }
+    assert_not @custom_message_setting.valid?
+    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
+  end
+
   def test_find_or_default
     assert_equal @custom_message_setting, CustomMessageSetting.find_or_default
   end
@@ -85,11 +91,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     yaml = "---\nen:\n  label_home: Home3"
     assert @custom_message_setting.update_with_custom_messages_yaml(yaml)
     assert_equal ({ 'label_home' => 'Home3' }), @custom_message_setting.custom_messages('en')
-  end
-  def test_update_with_custom_messages_yaml_if_yaml_is_invalid
-    yaml = "---\nen:\n  label_home: Home3\ninvalid-string"
-    assert_not @custom_message_setting.update_with_custom_messages_yaml(yaml)
-    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
   def test_toggle_enabled!
