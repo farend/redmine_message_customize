@@ -143,7 +143,7 @@ class CustomMessageSetting < Setting
     raw_messages = raw_custom_messages
     if raw_messages.present? && !raw_messages.is_a?(Hash)
       begin
-        messages = YAML.load("#{raw_messages}")
+        YAML.load("#{raw_messages}")
         errors.add(:base, l(:error_invalid_yaml_format))
       rescue Psych::SyntaxError => e
         errors.add(:base, e.message)
