@@ -42,22 +42,17 @@ class CustomMessageSetting < Setting
         original_custom_messages
       end
 
-    self.value = self.value.merge({custom_messages: messages.presence || {}})
+    self.custom_messages = messages
     self.save
   end
 
   def update_with_custom_messages_yaml(yaml)
-    messages = YAML.load(yaml)
-    self.value = self.value.merge({custom_messages: messages.presence || {}})
+    self.custom_messages = yaml
     self.save
-  rescue Psych::SyntaxError => e
-    self.value = self.value.merge({custom_messages: yaml})
-    errors.add(:base, e.message)
-    false
   end
 
   def toggle_enabled!
-    self.value = self.value.deep_merge({enabled: (!self.enabled?).to_s})
+    self.value = self.value.merge({enabled: (!self.enabled?).to_s})
 
     if result = self.save
       MessageCustomize::Locale.reload!(self.using_languages)
@@ -104,6 +99,13 @@ class CustomMessageSetting < Setting
 
   def raw_custom_messages
     self.value[:custom_messages] || self.value['custom_messages']
+  end
+
+  def custom_messages=(messages)
+    messages = YAML.load("#{messages}") unless messages.is_a?(Hash)
+    self.value = self.value.merge({custom_messages: messages.presence || {}})
+  rescue Psych::SyntaxError => e
+    self.value = self.value.merge({custom_messages: messages})
   end
 
   def custom_message_keys_are_available
