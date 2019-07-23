@@ -27,5 +27,5 @@ $ # redmine restart
 
 ```
 $ cd /your/path/redmine
-$ bundle exec rake test TEST=plugins/redmine_message_customize/test RAILS_ENV=test
+$ bundle exec rake redmine:plugins:test NAME=redmine_message_customize RAILS_ENV=test
 ```
