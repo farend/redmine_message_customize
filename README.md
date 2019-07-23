@@ -29,3 +29,7 @@ $ # redmine restart
 $ cd /your/path/redmine
 $ bundle exec rake redmine:plugins:test NAME=redmine_message_customize RAILS_ENV=test
 ```
+
+## CircleCI test
+
+https://circleci.com/gh/ishikawa999/redmine_message_customize
