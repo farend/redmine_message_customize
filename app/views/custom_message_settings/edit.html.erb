@@ -3,6 +3,12 @@
 <%= javascript_include_tag('select2.min', plugin: 'redmine_message_customize') %>
 <h2><%= l(:label_custom_messages) %></h2>
 
+<% unless @setting.enabled? %>
+  <div class='flash warning'>
+    <%= l(:text_disabled_customize) %>
+  </div>
+<% end %>
+
 <% if @setting.errors.any? %>
   <%= error_messages_for(@setting) %>
 <% end %>
