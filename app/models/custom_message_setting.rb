@@ -146,7 +146,7 @@ class CustomMessageSetting < Setting
         YAML.load("#{raw_messages}")
         errors.add(:base, l(:error_invalid_yaml_format))
       rescue Psych::SyntaxError => e
-        errors.add(:base, e.message)
+        errors.add(:base, "#{l(:error_invalid_yaml_format)} #{e.message}")
       end
     end
   end
