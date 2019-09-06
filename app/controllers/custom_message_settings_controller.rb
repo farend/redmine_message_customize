@@ -55,6 +55,9 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   def set_lang
-    @lang = MessageCustomize::Locale.find_language(params[:lang].presence || User.current.language.presence || 'en')
+    @lang =
+      MessageCustomize::Locale.find_language(
+        params[:lang].presence || @setting.custom_messages.keys.first || User.current.language.presence || Setting.default_language
+      )
   end
 end
