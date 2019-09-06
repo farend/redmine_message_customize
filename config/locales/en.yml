@@ -7,7 +7,7 @@ en:
         label_home: 'TOP'
   text_placeholder_choose_key: Please select the message you want to change.
   text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
-  text_for_your_reference: "If you do not know how to write, please refer to %{value}."
+  text_for_your_reference: If you do not know how to write, please refer to "%{value}".
   text_disabled_customize: Message customization by this plugin is disabled.
 
   error_unused_keys: The keys not present in Redmine are used.
@@ -21,4 +21,4 @@ en:
   label_yaml_tab: YAML mode
   label_enable_customize: Enable customize
   label_disable_customize: Disable customize
-  label_default_messages: Default messages
+  label_default_messages: Confirm default messages
