@@ -1,9 +1,13 @@
 class CustomMessageSettingsController < ApplicationController
   layout 'admin'
   before_action :require_admin, :set_custom_message_setting, :set_lang
-  require_sudo_mode :edit, :update, :toggle_enabled
+  require_sudo_mode :edit, :update, :toggle_enabled, :default_messages
 
   def edit
+  end
+
+  def default_messages
+    @file_path = Rails.root.join('config', 'locales', "#{@lang}.yml")
   end
 
   def update
@@ -18,12 +22,16 @@ class CustomMessageSettingsController < ApplicationController
     if @setting.errors.blank?
       flash[:notice] = l(:notice_successful_update)
       languages += @setting.using_languages
-      CustomMessageSetting.reload_translations!(languages)
+      MessageCustomize::Locale.reload!(languages)
 
       redirect_to edit_custom_message_settings_path(tab: params[:tab], lang: @lang)
     else
       render :edit
     end
+
+  # Catch an exception that occurs when the value field capacity is exceeded (ActiveRecord::ValueTooLong)
+  rescue ActiveRecord::StatementInvalid
+    render_error l(:error_value_too_long)
   end
 
   def toggle_enabled
@@ -37,6 +45,7 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   private
+
   def set_custom_message_setting
     @setting = CustomMessageSetting.find_or_default
   end
@@ -46,6 +55,6 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   def set_lang
-    @lang = CustomMessageSetting.find_language(params[:lang].presence || User.current.language.presence || 'en')
+    @lang = MessageCustomize::Locale.find_language(params[:lang].presence || User.current.language.presence || 'en')
   end
 end

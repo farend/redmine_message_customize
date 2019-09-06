@@ -1,18 +1,24 @@
 en:
   label_custom_messages: Message customize
   text_help_for_input_format: Please input the keyword you want to change in YAML format.
-  text_placeholder_template_case: 'example: When changing "Home" to "Home2"'
+  text_placeholder_template_case: 'example: When changing "Home" to "TOP"'
   text_placeholder_yaml_template: |
       en:
-        label_home: 'Home2'
+        label_home: 'TOP'
   text_placeholder_choose_key: Please select the message you want to change.
   text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
-  error_unavailable_keys: The keys not present in Redmine are used.
+  text_for_your_reference: "If you do not know how to write, please refer to %{value}."
+  text_disabled_customize: Message customization by this plugin is disabled.
+
+  error_unused_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.
+  error_unusable_type_of_keys: This plugin can not customize values other than string.
   error_invalid_yaml_format: The format of yaml is invalid.
+  error_value_too_long: "Could not save because there are too many custom messages. Please reduce the amount of messages custom messages."
   notice_enabled_customize: Successful in enable messages customization.
   notice_disabled_customize: Successful in disable messages customization.
   label_normal_tab: Normal mode
   label_yaml_tab: YAML mode
   label_enable_customize: Enable customize
   label_disable_customize: Disable customize
+  label_default_messages: Default messages

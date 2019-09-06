@@ -1,2 +1,3 @@
 $('#edit-custom-messages').html("<%= j (render 'custom_message_settings/messages', lang: @lang) %>");
+$('#default-messages-link').replaceWith('<%= open_default_messages_window_link(@lang) %>')
 $('#ajax-indicator').hide();

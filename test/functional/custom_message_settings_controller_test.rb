@@ -1,12 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CustomMessageSettingsControllerTest < Redmine::ControllerTest
-  fixtures :custom_message_settings
+class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? Redmine::ControllerTest : ActionController::TestCase
+  fixtures :custom_message_settings, :users
   include Redmine::I18n
+  prepend ::RailsKwargsTesting::ControllerMethods if defined?(RailsKwargsTesting)
 
   def setup
     @request.session[:user_id] = 1 # admin
-    CustomMessageSetting.reload_translations!('en')
+    MessageCustomize::Locale.reload!('en')
     I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
@@ -24,6 +25,22 @@ class CustomMessageSettingsControllerTest < Redmine::ControllerTest
   def test_edit_except_admin_user
     @request.session[:user_id] = 2
     get :edit
+    assert_response 403
+    assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
+  end
+
+  def test_default_messages
+    get :default_messages, params: {lang: 'ja'}
+    assert_response :success
+
+    assert_select 'h2', :text => "#{l(:label_default_messages)}(config/locales/ja.yml)"
+    assert_select 'div.autoscroll' do
+      assert_select 'table.filecontent.syntaxhl'
+    end
+  end
+  def test_default_messages_except_admin_user
+    @request.session[:user_id] = 2
+    get :default_messages
     assert_response 403
     assert_select 'p#errorExplanation', text: 'You are not authorized to access this page.'
   end

@@ -6,20 +6,32 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
   def setup
     @custom_message_setting = CustomMessageSetting.find(1)
-    CustomMessageSetting.reload_translations!('en')
+    MessageCustomize::Locale.reload!('en')
     I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
-  def test_validate_with_not_available_keys_should_return_false
-    @custom_message_setting.value = { custom_messages: { 'en' => {'foobar' => 'foobar' }} }
-    assert_not @custom_message_setting.save
-    assert_equal "#{l(:error_unavailable_keys)} keys: [foobar]", @custom_message_setting.errors[:base].first
+  def test_validate_with_unused_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'foo' => 'bar' }} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unused_keys)} keys: [foo]", @custom_message_setting.errors[:base].first
   end
 
-  def test_validate_with_not_available_languages_should_return_false
+  def test_validate_with_unusable_type_of_keys_should_invalid
+    @custom_message_setting.value = { custom_messages: { 'en' => {'date' => {'order' => 'foobar' }}} }
+    assert_not @custom_message_setting.valid?
+    assert_equal "#{l(:error_unusable_type_of_keys)} keys: [date.order]", @custom_message_setting.errors[:base].first
+  end
+
+  def test_validate_with_not_available_languages_should_invalid
     @custom_message_setting.value = { custom_messages: { 'foo' => {'label_home' => 'Home' }} }
-    assert_not @custom_message_setting.save
+    assert_not @custom_message_setting.valid?
     assert_equal "#{l(:error_unavailable_languages)} [foo]", @custom_message_setting.errors[:base].first
+  end
+
+  def test_validate_with_invalid_yaml_should_invalid
+    @custom_message_setting.value = { custom_messages: "---\nen:\n  label_home: Home3\ninvalid-string" }
+    assert_not @custom_message_setting.valid?
+    assert_equal "The format of yaml is invalid. (<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
   def test_find_or_default
@@ -80,11 +92,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert @custom_message_setting.update_with_custom_messages_yaml(yaml)
     assert_equal ({ 'label_home' => 'Home3' }), @custom_message_setting.custom_messages('en')
   end
-  def test_update_with_custom_messages_yaml_if_yaml_is_invalid
-    yaml = "---\nen:\n  label_home: Home3\ninvalid-string"
-    assert_not @custom_message_setting.update_with_custom_messages_yaml(yaml)
-    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
-  end
 
   def test_toggle_enabled!
     assert @custom_message_setting.enabled?
@@ -103,15 +110,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal ['en', 'ja'], @custom_message_setting.using_languages
   end
 
-  def test_available_messages_should_flatten_translations
-    flatten_hash = CustomMessageSetting.available_messages('en')
-    assert_equal 'am', flatten_hash[:'time.am']
-
-    # Language 'ar' not loaded
-    flatten_hash = CustomMessageSetting.available_messages('ar')
-    assert_equal "صباحا", flatten_hash[:'time.am']
-  end
-
   def test_flatten_hash_should_return_hash_with_flat_keys
     flatten_hash = CustomMessageSetting.flatten_hash({time: {am: 'foo'}})
     assert_equal ({:'time.am' => 'foo'}), flatten_hash
@@ -120,11 +118,5 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def test_flatten_hash_should_return_nest_hash
     nested_hash = CustomMessageSetting.nested_hash({:'time.am' => 'foo'})
     assert_equal ({'time' => {'am' => 'foo'}}), nested_hash
-  end
-
-  def test_reload_translations!
-    assert_nil I18n.backend.send(:translations)[:fr]
-    CustomMessageSetting.reload_translations!(['fr'])
-    assert_not_nil I18n.backend.send(:translations)[:fr]
   end
 end
