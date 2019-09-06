@@ -31,7 +31,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def test_validate_with_invalid_yaml_should_invalid
     @custom_message_setting.value = { custom_messages: "---\nen:\n  label_home: Home3\ninvalid-string" }
     assert_not @custom_message_setting.valid?
-    assert_equal "(<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
+    assert_equal "The format of yaml is invalid. (<unknown>): could not find expected ':' while scanning a simple key at line 4 column 1", @custom_message_setting.errors[:base].first
   end
 
   def test_find_or_default
