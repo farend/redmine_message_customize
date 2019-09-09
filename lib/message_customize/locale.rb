@@ -1,7 +1,7 @@
 module MessageCustomize
   module Locale
     @available_messages = {}
-    CHANGE_LOARD_ORDER_LOCALES_FILE_PATH = 'config/initializers/35_change_load_order_locales.rb'
+    CHANGE_LOAD_ORDER_LOCALES_FILE_PATH = 'config/initializers/35_change_load_order_locales.rb'
 
     class << self
       def available_locales
@@ -41,7 +41,7 @@ module MessageCustomize
       end
 
       def customizable_plugin_messages?
-        @customizable_plugin_messages ||= File.exist?(Rails.root.join(CHANGE_LOARD_ORDER_LOCALES_FILE_PATH))
+        @customizable_plugin_messages ||= File.exist?(Rails.root.join(CHANGE_LOAD_ORDER_LOCALES_FILE_PATH))
       end
     end
   end

@@ -67,7 +67,7 @@ class LocaleTest < ActiveSupport::TestCase
   end
 
   def test_customizable_plugin_messages?
-    expect = File.exist?(Rails.root.join('config', 'initializers', MessageCustomize::Locale::CHANGE_LOARD_ORDER_LOCALES_FILE_PATH))
+    expect = File.exist?(Rails.root.join('config', 'initializers', MessageCustomize::Locale::CHANGE_LOAD_ORDER_LOCALES_FILE_PATH))
     assert_equal expect, MessageCustomize::Locale.customizable_plugin_messages?
   end
 end
