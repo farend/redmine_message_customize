@@ -18,7 +18,7 @@ module MessageCustomize
           available_languages.each do |lang|
             redmine_root_locale_path = Rails.root.join('config', 'locales', "#{lang}.yml")
             if File.exist?(redmine_root_locale_path)
-              @available_messages[:"#{lang}"] = (I18n.backend.send(:load_yaml, redmine_root_locale_path)[lang] || {}).deep_symbolize_keys
+              @available_messages[:"#{lang}"] = (I18n.backend.send(:load_yml, redmine_root_locale_path)[lang] || {}).deep_symbolize_keys
             end
           end
         end
