@@ -30,17 +30,44 @@ class LocaleTest < ActiveSupport::TestCase
     assert_equal locales.uniq.sort.map(&:to_sym), MessageCustomize::Locale.available_locales
   end
 
-  def test_available_messages_should_return_translations
+  def test_available_messages_if_customizable_plugin_messages
+    MessageCustomize::Locale.stubs(:customizable_plugin_messages?).returns(true)
+
     # Reset @available_messages
     MessageCustomize::Locale.instance_variable_set(:@available_messages, {})
 
     en_available_messages = MessageCustomize::Locale.available_messages('en')
     assert_equal 'am', en_available_messages[:time][:am]
+    assert_equal 'Message customize', en_available_messages[:label_custom_messages] # plugin messages
     assert_equal [:en], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
 
-    # Language 'ar' not loaded
-    ar_available_messages = MessageCustomize::Locale.available_messages('ar')
-    assert_equal "صباحا", ar_available_messages[:time][:am]
-    assert_equal [:en, :ar], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
+    # Language 'ja' not loaded
+    ja_available_messages = MessageCustomize::Locale.available_messages('ja')
+    assert_equal "午前", ja_available_messages[:time][:am]
+    assert_equal 'メッセージのカスタマイズ', ja_available_messages[:label_custom_messages] # plugin messages
+    assert_equal [:en, :ja], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
+  end
+
+  def test_available_messages_should_return_messages_without_plugin_messages_if_not_customizable_plugin_messages
+    MessageCustomize::Locale.stubs(:customizable_plugin_messages?).returns(false)
+
+    # Reset @available_messages
+    MessageCustomize::Locale.instance_variable_set(:@available_messages, {})
+
+    en_available_messages = MessageCustomize::Locale.available_messages('en')
+    assert_equal 'am', en_available_messages[:time][:am]
+    assert_nil en_available_messages[:label_custom_messages] # plugin messages
+    assert_equal [:en], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
+
+    # Language 'ja' not loaded
+    ja_available_messages = MessageCustomize::Locale.available_messages('ja')
+    assert_equal "午前", ja_available_messages[:time][:am]
+    assert_nil ja_available_messages[:label_custom_messages] # plugin messages
+    assert_equal [:en, :ja], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
+  end
+
+  def test_customizable_plugin_messages?
+    expect = File.exist?(Rails.root.join('config', 'initializers', MessageCustomize::Locale::CHANGE_LOARD_ORDER_LOCALES_FILE_PATH))
+    assert_equal expect, MessageCustomize::Locale.customizable_plugin_messages?
   end
 end
