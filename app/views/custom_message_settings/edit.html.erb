@@ -12,8 +12,14 @@
 <% if @setting.errors.any? %>
   <%= error_messages_for(@setting) %>
 <% end %>
-<p class='toggle-enable'>
+<div class='message-customize-menu'>
   <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post, class: 'icon icon-settings' %> /
   <%= open_default_messages_window_link(@lang) %>
-</p>
+
+  <% unless MessageCustomize::Locale.customizable_plugin_messages? %>
+    <p>
+      <%= l(:text_unable_to_customize_plugin_messages, MessageCustomize::Locale::CHANGE_LOARD_ORDER_LOCALES_FILE_PATH) %>
+    </p>
+  <% end %>
+</div>
 <%= render_tabs (@setting.errors.any? ? [] : [{name: 'normal', partial: 'normal_tab', label: 'label_normal_tab'}]) + [{name: 'yaml', partial: 'yaml_tab', label: 'label_yaml_tab'}] %>
