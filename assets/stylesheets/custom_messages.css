@@ -42,4 +42,5 @@ div.message-customize-menu {
 div.message-customize-menu p {
   color: gray;
   font-size: 10px;
+  margin: 5px;
 }
