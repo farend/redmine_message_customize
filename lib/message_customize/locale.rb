@@ -1,6 +1,7 @@
 module MessageCustomize
   module Locale
     @available_messages = {}
+    CHANGE_LOAD_ORDER_LOCALES_FILE_PATH = 'config/initializers/35_change_load_order_locales.rb'
 
     class << self
       def available_locales
@@ -11,7 +12,16 @@ module MessageCustomize
         available_languages = self.find_language(languages.flatten)
         paths = I18n.load_path.select {|path| available_languages.include?(File.basename(path, '.*').to_s)}
         I18n.backend.load_translations(paths)
-        available_languages.each{|lang| @available_messages[:"#{lang}"] = I18n.backend.send(:translations)[:"#{lang}"] || {}}
+        if customizable_plugin_messages?
+          available_languages.each{|lang| @available_messages[:"#{lang}"] = I18n.backend.send(:translations)[:"#{lang}"] || {}}
+        else
+          available_languages.each do |lang|
+            redmine_root_locale_path = Rails.root.join('config', 'locales', "#{lang}.yml")
+            if File.exist?(redmine_root_locale_path)
+              @available_messages[:"#{lang}"] = (I18n.backend.send(:load_yml, redmine_root_locale_path)[lang] || {}).deep_symbolize_keys
+            end
+          end
+        end
       end
 
       def find_language(language=nil)
@@ -28,6 +38,10 @@ module MessageCustomize
         lang = :"#{lang}"
         self.reload!(lang) if @available_messages[lang].blank?
         @available_messages[lang] || {}
+      end
+
+      def customizable_plugin_messages?
+        @customizable_plugin_messages ||= File.exist?(Rails.root.join(CHANGE_LOAD_ORDER_LOCALES_FILE_PATH))
       end
     end
   end
