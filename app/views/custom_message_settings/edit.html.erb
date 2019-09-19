@@ -1,25 +1,21 @@
 <%= stylesheet_link_tag('custom_messages', plugin: 'redmine_message_customize') %>
 <%= stylesheet_link_tag('select2.min', plugin: 'redmine_message_customize') %>
 <%= javascript_include_tag('select2.min', plugin: 'redmine_message_customize') %>
-<h2><%= l(:label_custom_messages) %></h2>
-
 <% unless @setting.enabled? %>
   <div class='flash warning'>
     <%= l(:text_disabled_customize) %>
   </div>
 <% end %>
 
+<div class='message-customize-menu contextual'>
+  <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post, class: 'icon icon-settings' %> /
+  <%= open_default_messages_window_link(@lang) %>
+</div>
+
+<h2><%= l(:label_custom_messages) %></h2>
+
 <% if @setting.errors.any? %>
   <%= error_messages_for(@setting) %>
 <% end %>
-<div class='message-customize-menu'>
-  <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post, class: 'icon icon-settings' %> /
-  <%= open_default_messages_window_link(@lang) %>
 
-  <% unless MessageCustomize::Locale.customizable_plugin_messages? %>
-    <p>
-      <%= l(:text_unable_to_customize_plugin_messages) %>
-    </p>
-  <% end %>
-</div>
 <%= render_tabs (@setting.errors.any? ? [] : [{name: 'normal', partial: 'normal_tab', label: 'label_normal_tab'}]) + [{name: 'yaml', partial: 'yaml_tab', label: 'label_yaml_tab'}] %>
