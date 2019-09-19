@@ -9,7 +9,6 @@ en:
   text_description_of_search_box: You can enter search terms in the search box to narrow down the results.
   text_for_your_reference: If you do not know how to write, please refer to "%{value}".
   text_disabled_customize: All message customizations are disabled.
-  text_unable_to_customize_plugin_messages: Impossible to customize the messages of the plugins.
 
   error_unused_keys: The keys not present in Redmine are used.
   error_unavailable_languages: The languages not present in Redmine are used.

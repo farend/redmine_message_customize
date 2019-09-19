@@ -9,7 +9,6 @@ ja:
   text_description_of_search_box: 検索ボックスにキーワードを入力することで、選択肢を絞り込むことが出来ます。
   text_for_your_reference: "もし書き方がわからない場合は、「%{value}」が参考になるはずです。"
   text_disabled_customize: メッセージのカスタマイズはすべて無効になっています。
-  text_unable_to_customize_plugin_messages: Redmineに入っているプラグインのメッセージはカスタマイズできません。
 
   error_unused_keys: Redmineに存在しないキーが利用されています。
   error_unavailable_languages: Redmineで利用できない言語が利用されています。

@@ -35,12 +35,3 @@
 .select2-container--default .select2-results__option[aria-disabled=true] span {
   color: white;
 }
-
-div.message-customize-menu {
-  text-align: right;
-}
-div.message-customize-menu p {
-  color: gray;
-  font-size: 10px;
-  margin: 5px 0px;
-}
