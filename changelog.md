@@ -4,6 +4,7 @@
 
 * Add german translations
 * Change reordered loading of locales to be conditional
+* Change admin menu item of custom message settings to be highlighted when selected
 
 ## v0.1.0
 
