@@ -1,5 +1,9 @@
 # Redmine message customize plugin changelog
 
+## v0.1.1
+
+* Add german translations
+
 ## v0.1.0
 
 * [Fix "Infinite loop occurs in the process of calling I18n.available_locales"(Redmine 4.1 compatible)](https://github.com/ishikawa999/redmine_message_customize/issues/12)
