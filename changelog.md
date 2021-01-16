@@ -3,6 +3,7 @@
 ## v0.1.1
 
 * Add german translations
+* Change reordered loading of locales to be conditional
 
 ## v0.1.0
 
