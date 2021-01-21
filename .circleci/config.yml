@@ -89,6 +89,7 @@ workflows:
           database: 'mariadb'
       - run-trunk-tests:
           database: 'sqlite3'
+
       - run-tests:
           redmine_version: '4.1.1'
           ruby_version: '2.6'
@@ -109,6 +110,20 @@ workflows:
           redmine_version: '4.0.6'
           ruby_version: '2.6'
           database: 'pg'
+      - run-tests:
+          redmine_version: '4.0.6'
+          ruby_version: '2.6'
+          database: 'mysql'
+      - run-tests:
+          redmine_version: '4.0.6'
+          ruby_version: '2.6'
+          database: 'mariadb'
+      - run-tests:
+          redmine_version: '4.0.6'
+          ruby_version: '2.6'
+          database: 'sqlite3'
+
+      # Older versions of Redmine only test PostgreSQL.(This is to shorten the execution time.)
       - run-old-redmine-tests:
           redmine_version: '3.4.12'
           ruby_version: '2.4'
