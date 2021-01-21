@@ -1,41 +1,123 @@
 version: 2.1
 
 orbs:
-  redmine: agileware-jp/redmine-plugin@0.0.10
+  redmine-plugin: agileware-jp/redmine-plugin@2.1.0
+
+jobs:
+
+  run-trunk-tests:
+    parameters:
+      database:
+        type: enum
+        enum: ['mysql', 'pg', 'mariadb', 'sqlite3']
+    executor:
+      name: redmine-plugin/ruby-<< parameters.database >>
+      ruby_version: '2.7'
+    steps:
+      - checkout
+      - redmine-plugin/download-redmine-trunk
+      # Prevent Restore failure due to lack of Gemfile.local
+      - run:
+          working_directory: 'redmine'
+          command: touch Gemfile.local
+      - redmine-plugin/install-self
+      - redmine-plugin/generate-database_yml
+      - redmine-plugin/bundle-install
+      - redmine-plugin/test
+
+  run-tests:
+    parameters:
+      redmine_version:
+        type: string
+      ruby_version:
+        type: string
+      database:
+        type: enum
+        enum: ['mysql', 'pg', 'mariadb', 'sqlite3']
+    executor:
+      name: redmine-plugin/ruby-<< parameters.database >>
+      ruby_version: << parameters.ruby_version >>
+    steps:
+      - checkout
+      - redmine-plugin/download-redmine:
+          version: << parameters.redmine_version >>
+      # Prevent Restore failure due to lack of Gemfile.local
+      - run:
+          working_directory: 'redmine'
+          command: touch Gemfile.local
+      - redmine-plugin/install-self
+      - redmine-plugin/generate-database_yml
+      - redmine-plugin/bundle-install
+      - redmine-plugin/test
+
+  run-old-redmine-tests:
+    parameters:
+      redmine_version:
+        type: string
+      ruby_version:
+        type: string
+      database:
+        type: enum
+        enum: ['mysql', 'pg', 'mariadb', 'sqlite3']
+    executor:
+      name: redmine-plugin/ruby-<< parameters.database >>
+      ruby_version: << parameters.ruby_version >>
+      # Postgresql10 is not available prior to Rails 5.0.
+      db_version: '9.6'
+    steps:
+      - checkout
+      - redmine-plugin/download-redmine:
+          version: << parameters.redmine_version >>
+      # Prevent Restore failure due to lack of Gemfile.local
+      - run:
+          working_directory: 'redmine'
+          command: touch Gemfile.local
+      - redmine-plugin/install-self
+      - redmine-plugin/generate-database_yml
+      - redmine-plugin/bundle-install
+      - redmine-plugin/test
 
 workflows:
   version: 2
   test:
     jobs:
-      - redmine/download:
-          name: redmine40-download
-          redmine_version: '4.0.4'
-      - redmine/download:
-          name: redmine34-download
-          redmine_version: '3.4.11'
-      - redmine/download:
-          name: redmine33-download
+      - run-trunk-tests:
+          database: 'pg'
+      - run-trunk-tests:
+          database: 'mysql'
+      - run-trunk-tests:
+          database: 'mariadb'
+      - run-trunk-tests:
+          database: 'sqlite3'
+      - run-tests:
+          redmine_version: '4.1.1'
+          ruby_version: '2.6'
+          database: 'pg'
+      - run-tests:
+          redmine_version: '4.1.1'
+          ruby_version: '2.6'
+          database: 'mysql'
+      - run-tests:
+          redmine_version: '4.1.1'
+          ruby_version: '2.6'
+          database: 'mariadb'
+      - run-tests:
+          redmine_version: '4.1.1'
+          ruby_version: '2.6'
+          database: 'sqlite3'
+      - run-tests:
+          redmine_version: '4.0.6'
+          ruby_version: '2.6'
+          database: 'pg'
+      - run-old-redmine-tests:
+          redmine_version: '3.4.12'
+          ruby_version: '2.4'
+          database: 'pg'
+      - run-old-redmine-tests:
           redmine_version: '3.3.9'
-      - redmine/download:
-          name: redmine32-download
+          ruby_version: '2.3'
+          database: 'pg'
+      - run-old-redmine-tests:
           redmine_version: '3.2.9'
-      - redmine/test:
-          name: redmine40
-          before-setup: [redmine/generate_database_yml-pg]
-          executor: redmine/ruby-26-pg
-          requires: [redmine40-download]
-      - redmine/test:
-          name: redmine34
-          before-setup: [redmine/generate_database_yml-pg]
-          executor: redmine/ruby-24-pg
-          requires: [redmine34-download]
-      - redmine/test:
-          name: redmine33
-          before-setup: [redmine/generate_database_yml-pg]
-          executor: redmine/ruby-23-pg
-          requires: [redmine33-download]
-      - redmine/test:
-          name: redmine32
-          before-setup: [redmine/generate_database_yml-pg]
-          executor: redmine/ruby-22-pg
-          requires: [redmine32-download]
+          ruby_version: '2.2'
+          database: 'pg'
