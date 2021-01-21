@@ -1,0 +1,25 @@
+de:
+  label_custom_messages: Benutzerdefinierte Bezeichnungen
+  text_help_for_input_format: Bitte geben Sie die Keywörter der Bezeichnungen, die Sie anpanssen möchten, im YAML-Format ein.
+  text_placeholder_template_case: 'Beispiel: Umbenennen von "Home" zu "TOP"'
+  text_placeholder_yaml_template: |
+      en:
+        label_home: 'TOP'
+  text_placeholder_choose_key: Bitte wählen Sie die Bezeichnung aus, die Sie ändern möchten.
+  text_description_of_search_box: Sie können Suchbegriffe eingeben, um die Ergebnisse einzugrenzen.
+  text_for_your_reference: Beispiele für die Schreibweise können Sie hier:" %{value}" einsehen.
+  text_disabled_customize: Alle benutzerdefinierten Bezeichnungen sind deaktiviert.
+
+  error_unused_keys: Sie versuchen ein Keywort zu verwenden, das Redmine nicht unterstützt.
+  error_unavailable_languages: Sie versuchen eine Sprache zu verwenden, die Redmine nicht unterstützt.
+  error_unusable_type_of_keys: Dieses Plugin kann nur Strings anpassen.
+  error_invalid_yaml_format: Das YAML-Format ist ungültig.
+  error_value_too_long: Ihre Anpassungen können nicht gespeichert werden. Versuchen Sie die Anzahl der Änderungen zu reduzieren.
+  notice_enabled_customize: Benutzerdefinierte Bezeichnungen erfolgreich aktiviert.
+  notice_disabled_customize: Benutzerdefinierte Bezeichnungen erfolgreich deaktiviert.
+  label_normal_tab: Normaler Modus
+  label_yaml_tab: YAML Modus
+  label_enable_customize: Aktiviere eigene Anpassungen
+  label_disable_customize: Deaktiviere eigene Anpassungen
+  label_default_messages: Standardbezeichnugen ansehen
+  

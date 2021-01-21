@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
-p = Redmine::Plugin.find(:redmine_message_customize)
-custom_locales = Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))
-Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path - custom_locales + custom_locales)
+if Redmine::Plugin.installed? :redmine_message_customize
+  p = Redmine::Plugin.find(:redmine_message_customize)
+  custom_locales = Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))
+  Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path - custom_locales + custom_locales)
+end
