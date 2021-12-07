@@ -1,8 +1,8 @@
-require_dependency 'message_customize/locale'
+require File.expand_path('../lib/message_customize/locale', __FILE__)
 
 p = Redmine::Plugin.register :redmine_message_customize do
   name 'Redmine message customize plugin'
-  version '0.1.1'
+  version '0.1.2'
   description 'This is a plugin that allows messages in Redmine to be overwritten from the admin view'
   settings default: { custom_messages: {} }
   menu :admin_menu, :custom_messages, { controller: 'custom_message_settings', action: 'edit' },

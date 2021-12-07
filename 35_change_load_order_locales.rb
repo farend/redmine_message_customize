@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'redmine/plugin'
 if Redmine::Plugin.installed? :redmine_message_customize
   p = Redmine::Plugin.find(:redmine_message_customize)
   custom_locales = Dir.glob(File.join(p.directory, 'config', 'locales', 'custom_messages', '*.rb'))
