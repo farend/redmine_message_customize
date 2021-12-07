@@ -12,7 +12,7 @@ jobs:
         enum: ['mysql', 'pg', 'mariadb', 'sqlite3']
     executor:
       name: redmine-plugin/ruby-<< parameters.database >>
-      ruby_version: '2.7'
+      ruby_version: '3.0'
     steps:
       - checkout
       - redmine-plugin/download-redmine-trunk
