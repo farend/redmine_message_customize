@@ -17,16 +17,12 @@ module MessageCustomize
         if customizable_plugin_messages?
           available_languages.each{|lang| @available_messages[:"#{lang}"] = I18n.backend.send(:translations)[:"#{lang}"] || {}}
         else
-          p 'customizable_plugin_messages false'
-          p available_languages
           available_languages.each do |lang|
             redmine_root_locale_path = Rails.root.join('config', 'locales', "#{lang}.yml")
-            p File.exist?(redmine_root_locale_path)
             if File.exist?(redmine_root_locale_path)
               loaded_yml = I18n.backend.send(:load_yml, redmine_root_locale_path)
-              p loaded_yml
               loaded_yml = loaded_yml.first if loaded_yml.is_a?(Array)
-              @available_messages[:"#{lang}"] = (loaded_yml[lang] || {}).deep_symbolize_keys
+              @available_messages[:"#{lang}"] = (loaded_yml[lang] || loaded_yml[lang.to_sym] || {}).deep_symbolize_keys
             end
           end
         end
