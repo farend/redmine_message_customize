@@ -55,7 +55,6 @@ class LocaleTest < ActiveSupport::TestCase
     MessageCustomize::Locale.instance_variable_set(:@available_messages, {})
 
     en_available_messages = MessageCustomize::Locale.available_messages('en')
-    p en_available_messages
     assert_equal 'am', en_available_messages[:time][:am]
     assert_nil en_available_messages[:label_custom_messages] # plugin messages
     assert_equal [:en], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
