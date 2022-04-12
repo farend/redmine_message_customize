@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MessageCustomize
   module Locale
     @available_messages = {}
@@ -5,12 +7,12 @@ module MessageCustomize
 
     class << self
       def available_locales
-        @locales ||= I18n.load_path.map {|path| File.basename(path, '.*')}.uniq.sort.map(&:to_sym)
+        @available_locales ||= Rails.application.config.i18n.load_path.map {|path| File.basename(path, '.*')}.uniq.sort.map(&:to_sym)
       end
 
       def reload!(*languages)
         available_languages = self.find_language(languages.flatten)
-        paths = I18n.load_path.select {|path| available_languages.include?(File.basename(path, '.*').to_s)}
+        paths = Rails.application.config.i18n.load_path.select {|path| available_languages.include?(File.basename(path, '.*').to_s)}
         I18n.backend.load_translations(paths)
         if customizable_plugin_messages?
           available_languages.each{|lang| @available_messages[:"#{lang}"] = I18n.backend.send(:translations)[:"#{lang}"] || {}}
@@ -20,7 +22,7 @@ module MessageCustomize
             if File.exist?(redmine_root_locale_path)
               loaded_yml = I18n.backend.send(:load_yml, redmine_root_locale_path)
               loaded_yml = loaded_yml.first if loaded_yml.is_a?(Array)
-              @available_messages[:"#{lang}"] = (loaded_yml[lang] || {}).deep_symbolize_keys
+              @available_messages[:"#{lang}"] = (loaded_yml[lang] || loaded_yml[lang.to_sym] || {}).deep_symbolize_keys
             end
           end
         end
@@ -43,7 +45,7 @@ module MessageCustomize
       end
 
       def customizable_plugin_messages?
-        @customizable_plugin_messages ||= File.exist?(Rails.root.join(CHANGE_LOAD_ORDER_LOCALES_FILE_PATH))
+        Rails.application.config.i18n.load_path.last.include?('redmine_message_customize')
       end
     end
   end
