@@ -7,7 +7,7 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   def setup
     @custom_message_setting = CustomMessageSetting.find(1)
     MessageCustomize::Locale.reload!('en')
-    I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
+    Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
   def test_validate_with_unused_keys_should_invalid

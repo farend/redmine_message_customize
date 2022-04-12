@@ -6,7 +6,7 @@ class LocaleTest < ActiveSupport::TestCase
 
     def setup
       MessageCustomize::Locale.reload!('en')
-      I18n.load_path = (I18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
+      Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
     end
 
   def test_reload!
@@ -67,7 +67,13 @@ class LocaleTest < ActiveSupport::TestCase
   end
 
   def test_customizable_plugin_messages?
-    expect = File.exist?(Rails.root.join(MessageCustomize::Locale::CHANGE_LOAD_ORDER_LOCALES_FILE_PATH))
-    assert_equal expect, MessageCustomize::Locale.customizable_plugin_messages?
+    original_load_path = Rails.application.config.i18n.load_path
+    Rails.application.config.i18n.load_path = (original_load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', 'ja.rb'))).uniq
+    assert_equal true, MessageCustomize::Locale.customizable_plugin_messages?
+
+    Rails.application.config.i18n.load_path += [Rails.root.join('plugins', 'dummy', 'config', 'locales', 'en.yml').to_s]
+    assert_equal false, MessageCustomize::Locale.customizable_plugin_messages?
+    # cleaning
+    Rails.application.config.i18n.load_path = original_load_path
   end
 end

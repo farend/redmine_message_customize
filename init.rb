@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require File.expand_path('../lib/message_customize/locale', __FILE__)
+require File.expand_path('../lib/message_customize/hooks', __FILE__)
 
 p = Redmine::Plugin.register :redmine_message_customize do
   name 'Redmine message customize plugin'
