@@ -13,7 +13,7 @@ $ cp plugins/redmine_message_customize/35_change_load_order_locales.rb config/in
 $ # redmine restart
 ```
 
-:warning To customize messages for other plugins in **Redmine 4.1 or lower versions**, redmine_message_customize/35_change_load_order_locales.rb It is necessary to copy the file to redmine/config/initializers. 
+:warning: To customize messages for other plugins in **Redmine 4.1 or lower versions**, redmine_message_customize/35_change_load_order_locales.rb It is necessary to copy the file to redmine/config/initializers.  
 If redmine/config/initializers/35_change_load_order_locales.rb is missing, only non-plugin messages can be customized.
 
 ## Usage
