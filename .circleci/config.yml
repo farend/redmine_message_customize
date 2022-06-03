@@ -22,6 +22,9 @@ jobs:
           command: touch Gemfile.local
       - redmine-plugin/install-self
       - redmine-plugin/generate-database_yml
+      - run:
+          working_directory: 'redmine'
+          command: sleep 30
       - redmine-plugin/bundle-install
       - redmine-plugin/test
 
@@ -47,6 +50,9 @@ jobs:
           command: touch Gemfile.local
       - redmine-plugin/install-self
       - redmine-plugin/generate-database_yml
+      - run:
+          working_directory: 'redmine'
+          command: sleep 30
       - redmine-plugin/bundle-install
       - redmine-plugin/test
 
@@ -74,6 +80,9 @@ jobs:
           command: touch Gemfile.local
       - redmine-plugin/install-self
       - redmine-plugin/generate-database_yml
+      - run:
+          working_directory: 'redmine'
+          command: sleep 30
       - redmine-plugin/bundle-install
       - redmine-plugin/test
 
