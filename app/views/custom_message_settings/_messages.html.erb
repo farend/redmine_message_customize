@@ -12,7 +12,13 @@ $(document).ready(function() {
   setSelect2();
 });
 
-let currentSearchKeyword;
+// Fix a problem with focus not working in Redmine 5.0 or later.
+// issue: https://github.com/select2/select2/issues/5993
+$(document).on('select2:open', function() {
+  document.querySelector('.select2-search__field').focus();
+});
+
+var currentSearchKeyword;
 $('#key-selector').on('select2:select', function (e) {
   var key = e.params.data.id;
   var val = e.params.data.text;
