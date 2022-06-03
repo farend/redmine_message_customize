@@ -26,7 +26,7 @@
   text-decoration: none;
 }
 
-.select2-container--default .select2-results__option span.key {
+.select2-container--default .select2-results__option:not(.select2-results__option--highlighted) span.key {
   color: gray;
 }
 .select2-container--default .select2-results__option[aria-disabled=true] {
