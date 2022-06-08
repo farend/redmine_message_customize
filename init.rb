@@ -7,6 +7,9 @@ p = Redmine::Plugin.register :redmine_message_customize do
   name 'Redmine message customize plugin'
   version '0.1.4'
   description 'This is a plugin that allows messages in Redmine to be overwritten from the admin view'
+  author 'Far End Technologies Corporation'
+  url 'https://github.com/farend/redmine_message_customize'
+  author_url 'https://github.com/farend'
   settings default: { custom_messages: {} }
   menu :admin_menu, :custom_messages, { controller: 'custom_message_settings', action: 'edit' },
          caption: :label_custom_messages, html: { class: 'icon icon-edit' }
