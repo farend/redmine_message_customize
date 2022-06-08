@@ -38,3 +38,7 @@ $ bundle exec rake redmine:plugins:test NAME=redmine_message_customize RAILS_ENV
 ## CircleCI test
 
 https://circleci.com/gh/ishikawa999/redmine_message_customize
+
+----
+
+2022/6/08 Transferred ownership of the repository from ishikawa999 to [Far End Technologies Corporation](https://github.com/farend).
