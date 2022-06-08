@@ -7,7 +7,7 @@ This plugin changes the translation of the wording on the screen defined in "con
 
 ```
 $ cd /your/path/redmine
-$ git clone https://github.com/ishikawa999/redmine_message_customize.git plugins/redmine_message_customize
+$ git clone https://github.com/farend/redmine_message_customize.git plugins/redmine_message_customize
 $ # When Redmine 4.1 or lower versions
 $ cp plugins/redmine_message_customize/35_change_load_order_locales.rb config/initializers/35_change_load_order_locales.rb
 $ # redmine restart
@@ -20,13 +20,13 @@ If redmine/config/initializers/35_change_load_order_locales.rb is missing, only 
 
 * 1: Open setting page  
 Administration > Message customize
-<kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/administration_menu.png" /></kbd>
+<kbd><img src="https://github.com/farend/redmine_message_customize/blob/images/administration_menu.png" /></kbd>
 
 * 2-1: Normal mode tab
-<kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/normal_mode.png" /></kbd>
+<kbd><img src="https://github.com/farend/redmine_message_customize/blob/images/normal_mode.png" /></kbd>
 
 * 2-2: YAML mode tab
-<kbd><img src="https://github.com/ishikawa999/redmine_message_customize/blob/images/yaml_mode.png" /></kbd>
+<kbd><img src="https://github.com/farend/redmine_message_customize/blob/images/yaml_mode.png" /></kbd>
 
 ## Run test
 
@@ -37,7 +37,7 @@ $ bundle exec rake redmine:plugins:test NAME=redmine_message_customize RAILS_ENV
 
 ## CircleCI test
 
-https://circleci.com/gh/ishikawa999/redmine_message_customize
+https://circleci.com/gh/farend/redmine_message_customize
 
 ----
 
