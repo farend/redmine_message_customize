@@ -5,7 +5,7 @@ require File.expand_path('../lib/message_customize/hooks', __FILE__)
 
 p = Redmine::Plugin.register :redmine_message_customize do
   name 'Redmine message customize plugin'
-  version '0.1.4'
+  version '0.1.5'
   description 'This is a plugin that allows messages in Redmine to be overwritten from the admin view'
   author 'Far End Technologies Corporation'
   url 'https://github.com/farend/redmine_message_customize'
