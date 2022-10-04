@@ -1,1 +1,1 @@
-{ pl: CustomMessageSetting.find_or_default.custom_messages('pl', true) }
+{ pl: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('pl', true) }

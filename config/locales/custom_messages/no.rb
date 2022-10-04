@@ -1,1 +1,1 @@
-{ no: CustomMessageSetting.find_or_default.custom_messages('no', true) }
+{ no: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('no', true) }

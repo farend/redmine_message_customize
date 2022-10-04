@@ -1,1 +1,1 @@
-{ eu: CustomMessageSetting.find_or_default.custom_messages('eu', true) }
+{ eu: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('eu', true) }

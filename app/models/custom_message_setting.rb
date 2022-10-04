@@ -18,6 +18,18 @@ class CustomMessageSetting < Setting
     messages || {}
   end
 
+  def custom_messages_with_timestamp(lang=nil, check_enabled=false)
+    messages = self.custom_messages(lang, check_enabled)
+    messages.merge({'redmine_message_customize_timestamp' => self.try(:updated_on).to_i.to_s})
+  end
+
+  def latest_messages_applied?(lang)
+    return true if self.new_record?
+
+    redmine_message_customize_timestamp = I18n.backend.send(:translations)[:"#{lang}"][:redmine_message_customize_timestamp]
+    redmine_message_customize_timestamp == self.updated_on.to_i.to_s
+  end
+
   def custom_messages_to_flatten_hash(lang=nil)
     self.class.flatten_hash(custom_messages(lang))
   end

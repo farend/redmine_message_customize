@@ -1,1 +1,1 @@
-{ az: CustomMessageSetting.find_or_default.custom_messages('az', true) }
+{ az: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('az', true) }

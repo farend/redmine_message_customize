@@ -1,1 +1,1 @@
-{ hu: CustomMessageSetting.find_or_default.custom_messages('hu', true) }
+{ hu: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('hu', true) }

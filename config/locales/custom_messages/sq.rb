@@ -1,1 +1,1 @@
-{ sq: CustomMessageSetting.find_or_default.custom_messages('sq', true) }
+{ sq: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('sq', true) }

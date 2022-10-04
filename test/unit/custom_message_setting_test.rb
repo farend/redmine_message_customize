@@ -55,6 +55,30 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal ({}), @custom_message_setting.custom_messages('foo')
   end
 
+  def test_custom_messages_with_timestamp
+    assert_equal @custom_message_setting.value['custom_messages'].merge({'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp
+    assert_equal ({'label_home' => 'Home1', 'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('en')
+    assert_equal ({'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('foo')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_new_record
+    @custom_message_setting.destroy
+    custom_message_setting = CustomMessageSetting.find_or_default
+    assert custom_message_setting.latest_messages_applied?('en')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_redmine_message_customize_timestamp_equal_updated_on
+    assert_equal @custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:en][:redmine_message_customize_timestamp]
+    assert @custom_message_setting.latest_messages_applied?('en')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_redmine_message_customize_timestamp_not_equal_updated_on
+    @custom_message_setting.update_with_custom_messages({'label_home' => 'Changed home'}, 'en')
+
+    assert_not_equal @custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:en][:redmine_message_customize_timestamp]
+    assert_not @custom_message_setting.latest_messages_applied?('en')
+  end
+
   def test_custom_messages_with_check_enabled
     assert @custom_message_setting.enabled?
     assert_equal ({'label_home' => 'Home1'}), @custom_message_setting.custom_messages('en', true)
