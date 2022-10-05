@@ -1,13 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? Redmine::ControllerTest : ActionController::TestCase
-  fixtures :custom_message_settings, :users
+  fixtures :users, :email_addresses, :roles, :custom_message_settings
   include Redmine::I18n
   prepend ::RailsKwargsTesting::ControllerMethods if defined?(RailsKwargsTesting)
 
   def setup
     @request.session[:user_id] = 1 # admin
-    MessageCustomize::Locale.reload!('en')
+    MessageCustomize::Locale.reload!(['en', 'ja'])
     Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 

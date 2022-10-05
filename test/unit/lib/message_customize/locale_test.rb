@@ -5,7 +5,7 @@ class LocaleTest < ActiveSupport::TestCase
   include Redmine::I18n
 
     def setup
-      MessageCustomize::Locale.reload!('en')
+      MessageCustomize::Locale.reload!(['en', 'ja'])
       Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
     end
 
@@ -18,7 +18,7 @@ class LocaleTest < ActiveSupport::TestCase
     setting.save
 
     assert_equal 'Home1', I18n.backend.send(:translations)[:en][:label_home]
-    MessageCustomize::Locale.reload!('en')
+    MessageCustomize::Locale.reload!(['en'])
     assert_equal 'Changed home', I18n.backend.send(:translations)[:en][:label_home]
     assert_equal [:en], MessageCustomize::Locale.instance_variable_get(:@available_messages).keys
   end
