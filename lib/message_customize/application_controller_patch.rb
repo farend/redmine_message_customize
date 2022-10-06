@@ -13,9 +13,8 @@ module MessageCustomize
 
     module InstanceMethod
       def reload_customize_messages
-        custom_message_setting = CustomMessageSetting.find_or_default
-
         language = User.current.language.presence || Setting.default_language
+        custom_message_setting = CustomMessageSetting.find_or_default
         return if custom_message_setting.latest_messages_applied?(language)
 
         MessageCustomize::Locale.reload!([language])

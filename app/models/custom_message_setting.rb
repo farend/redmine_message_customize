@@ -68,15 +68,6 @@ class CustomMessageSetting < Setting
     self.save
   end
 
-  def using_languages
-    messages = self.custom_messages
-    if messages.is_a?(Hash)
-      messages.keys.map(&:to_s)
-    else
-      [User.current.language]
-    end
-  end
-
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
   def self.flatten_hash(hash=nil)
     return hash unless hash.is_a?(Hash)

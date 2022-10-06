@@ -134,10 +134,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal 'Home1', l(:label_home)
   end
 
-  def test_using_languages
-    assert_equal ['en', 'ja'], @custom_message_setting.using_languages
-  end
-
   def test_flatten_hash_should_return_hash_with_flat_keys
     flatten_hash = CustomMessageSetting.flatten_hash({time: {am: 'foo'}})
     assert_equal ({:'time.am' => 'foo'}), flatten_hash
