@@ -8,6 +8,7 @@ class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? 
   def setup
     @request.session[:user_id] = 1 # admin
     MessageCustomize::Locale.reload!(['en', 'ja'])
+    set_language_if_valid 'en'
     Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
