@@ -14,7 +14,6 @@ module MessageCustomize
     module InstanceMethod
       def reload_customize_messages
         custom_message_setting = CustomMessageSetting.find_or_default
-        return if custom_message_setting.new_record?
 
         language = User.current.language.presence || Setting.default_language
         return if custom_message_setting.latest_messages_applied?(language)
