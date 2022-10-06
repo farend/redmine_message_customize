@@ -65,11 +65,7 @@ class CustomMessageSetting < Setting
 
   def toggle_enabled!
     self.value = self.value.merge({enabled: (!self.enabled?).to_s})
-
-    if result = self.save
-      MessageCustomize::Locale.reload!(self.using_languages)
-    end
-    result
+    self.save
   end
 
   def using_languages

@@ -50,6 +50,7 @@ class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? 
 
     get :update, params: { settings: {'custom_messages'=>{'label_home' => 'Home3'}}, lang: 'en', tab: 'normal' }
 
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home3', l(:label_home)
     assert_redirected_to edit_custom_message_settings_path(lang: 'en', tab: 'normal')
     assert_equal l(:notice_successful_update), flash[:notice]
@@ -59,6 +60,7 @@ class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? 
 
     get :update, params: { settings: {'custom_messages_yaml'=>"---\nen:\n  label_home: Home3"}, tab: 'yaml' }
 
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home3', l(:label_home)
     assert_redirected_to edit_custom_message_settings_path(lang: 'en', tab: 'yaml')
     assert_equal l(:notice_successful_update), flash[:notice]

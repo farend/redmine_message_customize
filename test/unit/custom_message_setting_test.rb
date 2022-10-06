@@ -124,10 +124,12 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
     @custom_message_setting.toggle_enabled!
     assert_not @custom_message_setting.enabled?
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home', l(:label_home)
 
     @custom_message_setting.toggle_enabled!
     assert @custom_message_setting.enabled?
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home1', l(:label_home)
   end
 

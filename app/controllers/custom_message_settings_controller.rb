@@ -12,8 +12,6 @@ class CustomMessageSettingsController < ApplicationController
   end
 
   def update
-    languages = @setting.using_languages
-
     if setting_params.key?(:custom_messages) || params[:tab] == 'normal'
       @setting.update_with_custom_messages(setting_params[:custom_messages].try(:to_unsafe_h).try(:to_hash) || {}, @lang)
     elsif setting_params.key?(:custom_messages_yaml)
@@ -22,9 +20,6 @@ class CustomMessageSettingsController < ApplicationController
 
     if @setting.errors.blank?
       flash[:notice] = l(:notice_successful_update)
-      languages += @setting.using_languages
-      MessageCustomize::Locale.reload!(languages)
-
       redirect_to edit_custom_message_settings_path(tab: params[:tab], lang: @lang)
     else
       render :edit
