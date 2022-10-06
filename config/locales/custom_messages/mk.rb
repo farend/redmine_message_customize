@@ -1,1 +1,1 @@
-{ mk: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('mk', true) }
+{ mk: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('mk') }

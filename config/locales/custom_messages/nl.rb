@@ -1,1 +1,1 @@
-{ nl: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('nl', true) }
+{ nl: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('nl') }

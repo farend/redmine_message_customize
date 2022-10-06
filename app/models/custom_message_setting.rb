@@ -18,8 +18,8 @@ class CustomMessageSetting < Setting
     messages || {}
   end
 
-  def custom_messages_with_timestamp(lang=nil, check_enabled=false)
-    messages = self.custom_messages(lang, check_enabled)
+  def custom_messages_with_timestamp(lang)
+    messages = self.custom_messages(lang, true)
     messages.merge({'redmine_message_customize_timestamp' => self.try(:updated_on).to_i.to_s})
   end
 

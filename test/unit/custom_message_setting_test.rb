@@ -58,7 +58,6 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
   end
 
   def test_custom_messages_with_timestamp
-    assert_equal @custom_message_setting.value['custom_messages'].merge({'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp
     assert_equal ({'label_home' => 'Home1', 'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('en')
     assert_equal ({'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('foo')
   end

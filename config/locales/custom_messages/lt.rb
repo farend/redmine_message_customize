@@ -1,1 +1,1 @@
-{ lt: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('lt', true) }
+{ lt: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('lt') }
