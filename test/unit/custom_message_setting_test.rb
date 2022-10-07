@@ -1,12 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CustomMessageSettingTest < ActiveSupport::TestCase
-  fixtures :custom_message_settings
+  fixtures :users, :email_addresses, :roles, :custom_message_settings
   include Redmine::I18n
 
   def setup
+    User.current = User.find_by(login: 'admin')
     @custom_message_setting = CustomMessageSetting.find(1)
-    MessageCustomize::Locale.reload!('en')
+    MessageCustomize::Locale.reload!(['en', 'ja'])
+    set_language_if_valid 'en'
     Rails.application.config.i18n.load_path = (Rails.application.config.i18n.load_path + Dir.glob(Rails.root.join('plugins', 'redmine_message_customize', 'config', 'locales', 'custom_messages', '*.rb'))).uniq
   end
 
@@ -55,6 +57,29 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
     assert_equal ({}), @custom_message_setting.custom_messages('foo')
   end
 
+  def test_custom_messages_with_timestamp
+    assert_equal ({'label_home' => 'Home1', 'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('en')
+    assert_equal ({'redmine_message_customize_timestamp' => @custom_message_setting.updated_on.to_i.to_s}), @custom_message_setting.custom_messages_with_timestamp('foo')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_new_record
+    @custom_message_setting.destroy
+    custom_message_setting = CustomMessageSetting.find_or_default
+    assert custom_message_setting.latest_messages_applied?('en')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_redmine_message_customize_timestamp_equal_updated_on
+    assert_equal @custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:en][:redmine_message_customize_timestamp]
+    assert @custom_message_setting.latest_messages_applied?('en')
+  end
+
+  def test_latest_messages_applied_should_return_true_if_redmine_message_customize_timestamp_not_equal_updated_on
+    @custom_message_setting.update_with_custom_messages({'label_home' => 'Changed home'}, 'en')
+
+    assert_not_equal @custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:en][:redmine_message_customize_timestamp]
+    assert_not @custom_message_setting.latest_messages_applied?('en')
+  end
+
   def test_custom_messages_with_check_enabled
     assert @custom_message_setting.enabled?
     assert_equal ({'label_home' => 'Home1'}), @custom_message_setting.custom_messages('en', true)
@@ -99,15 +124,13 @@ class CustomMessageSettingTest < ActiveSupport::TestCase
 
     @custom_message_setting.toggle_enabled!
     assert_not @custom_message_setting.enabled?
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home', l(:label_home)
 
     @custom_message_setting.toggle_enabled!
     assert @custom_message_setting.enabled?
+    MessageCustomize::Locale.reload!('en')
     assert_equal 'Home1', l(:label_home)
-  end
-
-  def test_using_languages
-    assert_equal ['en', 'ja'], @custom_message_setting.using_languages
   end
 
   def test_flatten_hash_should_return_hash_with_flat_keys

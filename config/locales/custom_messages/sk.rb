@@ -1,1 +1,1 @@
-{ sk: CustomMessageSetting.find_or_default.custom_messages('sk', true) }
+{ sk: CustomMessageSetting.find_or_default.custom_messages_with_timestamp('sk') }

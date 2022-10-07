@@ -1,1 +1,1 @@
-{ "zh-TW": CustomMessageSetting.find_or_default.custom_messages('zh-TW', true) }
+{ "zh-TW": CustomMessageSetting.find_or_default.custom_messages_with_timestamp('zh-TW') }

@@ -18,6 +18,18 @@ class CustomMessageSetting < Setting
     messages || {}
   end
 
+  def custom_messages_with_timestamp(lang)
+    messages = self.custom_messages(lang, true)
+    messages.merge({'redmine_message_customize_timestamp' => self.try(:updated_on).to_i.to_s})
+  end
+
+  def latest_messages_applied?(lang)
+    return true if self.new_record?
+
+    redmine_message_customize_timestamp = I18n.backend.send(:translations)[:"#{lang}"][:redmine_message_customize_timestamp]
+    redmine_message_customize_timestamp == self.updated_on.to_i.to_s
+  end
+
   def custom_messages_to_flatten_hash(lang=nil)
     self.class.flatten_hash(custom_messages(lang))
   end
@@ -53,20 +65,7 @@ class CustomMessageSetting < Setting
 
   def toggle_enabled!
     self.value = self.value.merge({enabled: (!self.enabled?).to_s})
-
-    if result = self.save
-      MessageCustomize::Locale.reload!(self.using_languages)
-    end
-    result
-  end
-
-  def using_languages
-    messages = self.custom_messages
-    if messages.is_a?(Hash)
-      messages.keys.map(&:to_s)
-    else
-      [User.current.language]
-    end
+    self.save
   end
 
   # { date: { formats: { defaults: '%m/%d/%Y'}}} to {'date.formats.defaults' => '%m/%d/%Y'}
