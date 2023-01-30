@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'application_controller'
-
 module MessageCustomize
   module ApplicationControllerPatch
     def self.included(base)
