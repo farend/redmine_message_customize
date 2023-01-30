@@ -26,7 +26,7 @@ class CustomMessageSetting < Setting
   def latest_messages_applied?(lang)
     return true if self.new_record?
 
-    redmine_message_customize_timestamp = I18n.backend.send(:translations)[:"#{lang}"][:redmine_message_customize_timestamp]
+    redmine_message_customize_timestamp = I18n.backend.send(:translations)[:"#{lang}"]&.[](:redmine_message_customize_timestamp)
     redmine_message_customize_timestamp == self.updated_on.to_i.to_s
   end
 
