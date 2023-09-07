@@ -1,6 +1,7 @@
 class CustomMessageSettingsController < ApplicationController
   layout 'admin'
   menu_item :custom_messages
+  self.main_menu = false
   before_action :require_admin, :set_custom_message_setting, :set_lang
   require_sudo_mode :edit, :update, :toggle_enabled, :default_messages
 
