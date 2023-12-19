@@ -40,7 +40,7 @@ function AddMessageInputField(key, val){
     $('<input>').attr({
       type: 'text',
       value: val.replace(/.*: /, ''),
-      name: 'settings[custom_messages[' + key + ']]'
+      name: 'settings[custom_messages][' + key + ']'
     }).appendTo($('#edit-custom-messages .tabular p:first'));
     $('<a>').attr({
        class: 'icon icon-del clear-key-link',
