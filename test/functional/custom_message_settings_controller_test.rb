@@ -22,6 +22,7 @@ class CustomMessageSettingsControllerTest < defined?(Redmine::ControllerTest) ? 
       assert_select 'a#tab-normal'
       assert_select 'a#tab-yaml'
     end
+    assert_select 'div#edit-custom-messages input[name=?]', 'settings[custom_messages][label_home]'
   end
   def test_edit_except_admin_user
     @request.session[:user_id] = 2
