@@ -45,7 +45,7 @@ module MessageCustomize
       end
 
       def customizable_plugin_messages?
-        Rails.application.config.i18n.load_path.last.include?('redmine_message_customize')
+        Rails.application.config.i18n.load_path.last.include?('redmine_message_customize/config/locales')
       end
     end
   end
