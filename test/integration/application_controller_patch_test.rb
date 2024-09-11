@@ -26,8 +26,28 @@ class ApplicationControllerPatchTest < Redmine::IntegrationTest
     assert_equal custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:en][:redmine_message_customize_timestamp]
   end
 
+  def test_reload_if_user_language_is_auto_and_browser_language_messages_are_not_latest
+    # Reload based on the browser language if the language in User.current is ''(auto)
+    User.find_by_login('admin').update(language: '')
+    log_user('admin', 'admin')
+    custom_message_setting = CustomMessageSetting.find_or_default
+
+    custom_message_setting.update_with_custom_messages({'label_home' => 'Changed home'}, 'ja')
+    assert_equal 'Home2', I18n.backend.send(:translations)[:ja][:label_home]
+    assert_equal '1640995200', I18n.backend.send(:translations)[:ja][:redmine_message_customize_timestamp]
+    with_settings :default_language => 'en' do
+      dummy_http_headers = @request.env
+      dummy_http_headers['HTTP_ACCEPT_LANGUAGE'] = 'ja'
+      ActionDispatch::Request.any_instance.stubs(:env).returns(dummy_http_headers)
+
+      get '/issues'
+    end
+    assert_equal 'Changed home', I18n.backend.send(:translations)[:ja][:label_home]
+    assert_equal custom_message_setting.updated_on.to_i.to_s, I18n.backend.send(:translations)[:ja][:redmine_message_customize_timestamp]
+  end
+
   def test_reload_if_user_language_is_auto_and_default_language_messages_are_not_latest
-    # User.currentのlanguageが''(auto)でもSetting.default_languageを元に用語の最新化を行うこと
+    # Reload based on the default language if the language in User.current is ''(auto) and request.env['HTTP_ACCEPT_LANGUAGE'] is nil
     User.find_by_login('admin').update(language: '')
     log_user('admin', 'admin')
     custom_message_setting = CustomMessageSetting.find_or_default
