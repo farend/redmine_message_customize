@@ -12,10 +12,16 @@ module MessageCustomize
     module InstanceMethod
       def reload_customize_messages
         custom_message_setting = CustomMessageSetting.find_or_default
-        # NOTE: ApplicationController#set_localization sets the appropriate language in I18n.locale
-        return if custom_message_setting.latest_messages_applied?(I18n.locale)
+        return if custom_message_setting.latest_messages_applied?(current_user_language)
 
-        MessageCustomize::Locale.reload!([I18n.locale])
+        MessageCustomize::Locale.reload!([current_user_language])
+      end
+
+      private
+
+      # NOTE: ApplicationController#set_localization sets the appropriate language in I18n.locale
+      def current_user_language
+        I18n.locale
       end
     end
   end
