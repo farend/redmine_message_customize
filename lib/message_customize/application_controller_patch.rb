@@ -19,8 +19,9 @@ module MessageCustomize
 
       private
 
+      # NOTE: ApplicationController#set_localization sets the appropriate language in I18n.locale
       def current_user_language
-        User.current.language.presence || Setting.default_language
+        I18n.locale
       end
     end
   end
