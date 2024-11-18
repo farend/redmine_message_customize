@@ -1,6 +1,6 @@
 <div>
   <%= select_tag 'select-key', available_message_options(@setting, lang), id: 'key-selector' %>
-  <span class='icon icon-help'><%= sprite_icon('help', l(:text_description_of_search_box)) %></span>
+  <span class='icon'><%= sprite_icon('help', l(:text_description_of_search_box)) %></span>
 </div>
 <br>
 <div class='tabular'>
@@ -43,7 +43,7 @@ function AddMessageInputField(key, val){
       name: 'settings[custom_messages][' + key + ']'
     }).appendTo($('#edit-custom-messages .tabular p:first'));
     $('<a>').attr({
-       class: 'icon icon-del clear-key-link',
+       class: 'icon clear-key-link',
        href: '#',
        onclick: '$(this).closest("p").remove(); return false;'
     }).html('<%= sprite_icon('del') %>').appendTo($('#edit-custom-messages .tabular p:first'));

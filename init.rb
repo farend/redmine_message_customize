@@ -13,7 +13,7 @@ p = Redmine::Plugin.register :redmine_message_customize do
   author_url 'https://github.com/farend'
   settings default: { custom_messages: {} }
   menu :admin_menu, :custom_messages, { controller: 'custom_message_settings', action: 'edit' },
-         caption: :label_custom_messages, html: { class: 'icon icon-edit' }, icon: 'edit'
+         caption: :label_custom_messages, html: { class: 'icon' }, icon: 'edit'
   requires_redmine version_or_higher: '6.0'
 end
 
