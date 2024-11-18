@@ -8,7 +8,7 @@
 <% end %>
 
 <div class='message-customize-menu contextual'>
-  <%= link_to (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize)), toggle_enabled_custom_message_settings_path, method: :post, class: 'icon icon-settings' %> /
+  <%= link_to sprite_icon('settings', (@setting.enabled? ? l(:label_disable_customize) : l(:label_enable_customize))), toggle_enabled_custom_message_settings_path, method: :post, class: 'icon' %> /
   <%= open_default_messages_window_link(@lang) %>
 </div>
 
