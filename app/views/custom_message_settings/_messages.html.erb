@@ -1,6 +1,6 @@
 <div>
   <%= select_tag 'select-key', available_message_options(@setting, lang), id: 'key-selector' %>
-  <span class='icon icon-help'><%= l(:text_description_of_search_box) %></span>
+  <span class='icon icon-help'><%= sprite_icon('help', l(:text_description_of_search_box)) %></span>
 </div>
 <br>
 <div class='tabular'>
@@ -45,8 +45,8 @@ function AddMessageInputField(key, val){
     $('<a>').attr({
        class: 'icon icon-del clear-key-link',
        href: '#',
-       onclick: '$(this).closest("p").remove();; return false;'
-    }).appendTo($('#edit-custom-messages .tabular p:first'));
+       onclick: '$(this).closest("p").remove(); return false;'
+    }).html('<%= sprite_icon('del') %>').appendTo($('#edit-custom-messages .tabular p:first'));
     $('#key-selector').val('').change();
     $('#key-selector option[value="' + key + '"]').prop("disabled", true).change();
     setSelect2();
